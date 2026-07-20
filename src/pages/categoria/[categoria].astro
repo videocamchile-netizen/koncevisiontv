@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import NewsCard from '../../components/NewsCard.astro';
+import Sidebar from '../../components/Sidebar.astro';
 import { CATEGORIAS, slugCategoria } from '../../data/categorias.mjs';
 import { getCollection } from 'astro:content';
 
@@ -19,22 +20,28 @@ const noticias = (await getCollection('noticias', ({ data }) => data.categoria =
 
 <Layout title={categoria} description={`Últimas noticias de ${categoria} en Koncevision TV.`}>
     <main class="contenedor pagina-categoria">
-        <h1 class="categoria-titulo">{categoria}</h1>
+        <div class="layout-con-sidebar">
+            <div class="columna-principal">
+                <h1 class="categoria-titulo">{categoria}</h1>
 
-        {noticias.length === 0 && (
-            <p class="vacio-categoria">Todavía no hay noticias publicadas en esta categoría. Vuelve pronto.</p>
-        )}
+                {noticias.length === 0 && (
+                    <p class="vacio-categoria">Todavía no hay noticias publicadas en esta categoría. Vuelve pronto.</p>
+                )}
 
-        <div class="noticias-grid">
-            {noticias.map((noticia) => (
-                <NewsCard
-                    categoria={noticia.data.categoria}
-                    enlace={`/noticias/${noticia.id}`}
-                    imagenUrl={noticia.data.imagen}
-                    resumen={noticia.data.resumen}
-                    titulo={noticia.data.titulo}
-                />
-            ))}
+                <div class="noticias-grid">
+                    {noticias.map((noticia) => (
+                        <NewsCard
+                            categoria={noticia.data.categoria}
+                            enlace={`/noticias/${noticia.id}`}
+                            imagenUrl={noticia.data.imagen}
+                            resumen={noticia.data.resumen}
+                            titulo={noticia.data.titulo}
+                        />
+                    ))}
+                </div>
+            </div>
+
+            <Sidebar />
         </div>
     </main>
 </Layout>

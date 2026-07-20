@@ -54,9 +54,22 @@ button:focus-visible {
 }
 
 .contenedor {
-    max-width: 960px;
+    max-width: 1240px;
     margin: 0 auto;
     padding: 0 20px;
+}
+
+.layout-con-sidebar {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+    gap: 40px;
+    align-items: start;
+}
+
+@media (max-width: 900px) {
+    .layout-con-sidebar {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Marco tipo visor de cámara, tomado del isotipo de Koncevision */

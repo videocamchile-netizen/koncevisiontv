@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import Sidebar from '../../components/Sidebar.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -30,15 +31,21 @@ const { titulo, resumen, categoria, imagen, imagenCredito, fuenteNombre, fuenteU
         </div>
 
         <div class="contenedor cuerpo-articulo">
-            <article class="prosa">
-                <Content />
-            </article>
+            <div class="layout-con-sidebar">
+                <div class="columna-principal">
+                    <article class="prosa">
+                        <Content />
+                    </article>
 
-            <p class="fuente-box">
-                Fuente original: <a href={fuenteUrl} target="_blank" rel="noopener noreferrer nofollow">{fuenteNombre}</a>
-            </p>
+                    <p class="fuente-box">
+                        Fuente original: <a href={fuenteUrl} target="_blank" rel="noopener noreferrer nofollow">{fuenteNombre}</a>
+                    </p>
 
-            <a href="/" class="volver">&larr; Volver a Últimas Noticias</a>
+                    <a href="/" class="volver">&larr; Volver a Últimas Noticias</a>
+                </div>
+
+                <Sidebar />
+            </div>
         </div>
     </main>
 </Layout>

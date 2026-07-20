@@ -1,0 +1,174 @@
+---
+import { slugCategoria } from '../data/categorias.mjs';
+import programa from '../data/ultimo-programa.json';
+import { getCollection } from 'astro:content';
+
+const CATEGORIAS_DESTACADAS = ['Nacional', 'Internacional', 'Economía'];
+
+const masLeidas = (await getCollection('noticias'))
+    .sort((a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf())
+    .slice(0, 5);
+
+const miniaturaPrograma = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.jpg`;
+---
+
+<aside class="sidebar">
+    <section class="bloque">
+        <h2 class="bloque-titulo">Más Leídas</h2>
+        {masLeidas.length === 0 ? (
+            <p class="bloque-vacio">Todavía no hay noticias publicadas.</p>
+        ) : (
+            <ol class="lista-leidas">
+                {masLeidas.map((noticia, indice) => (
+                    <li>
+                        <a href={`/noticias/${noticia.id}`}>
+                            <span class="numero">{indice + 1}</span>
+                            <span>{noticia.data.titulo}</span>
+                        </a>
+                    </li>
+                ))}
+            </ol>
+        )}
+    </section>
+
+    <section class="bloque">
+        <h2 class="bloque-titulo">Categorías</h2>
+        <ul class="lista-categorias">
+            {CATEGORIAS_DESTACADAS.map((categoria) => (
+                <li>
+                    <a href={`/categoria/${slugCategoria(categoria)}`}>{categoria}</a>
+                </li>
+            ))}
+        </ul>
+    </section>
+
+    <section class="bloque">
+        <h2 class="bloque-titulo">Último Programa</h2>
+        <a href="/ultimo-programa" class="programa-card">
+            <img src={miniaturaPrograma} alt={programa.titulo} loading="lazy" />
+            <span>{programa.titulo}</span>
+        </a>
+    </section>
+
+    <a href="https://www.youtube.com/@KoncevisionTV" target="_blank" rel="noopener noreferrer" class="boton-youtube-sidebar">
+        ▶ Síguenos en YouTube
+    </a>
+</aside>
+
+<style>
+    .sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .bloque {
+        background: white;
+        border: 1px solid var(--borde-suave);
+        border-radius: 4px;
+        padding: 20px;
+    }
+
+    .bloque-titulo {
+        font-size: 1.1rem;
+        border-bottom: 3px solid var(--rojo-konce);
+        padding-bottom: 8px;
+        margin-bottom: 14px;
+    }
+
+    .bloque-vacio {
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .lista-leidas {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .lista-leidas a {
+        display: flex;
+        gap: 10px;
+        text-decoration: none;
+        color: var(--carbon);
+        font-size: 0.92rem;
+        line-height: 1.4;
+    }
+
+    .lista-leidas a:hover {
+        color: var(--rojo-konce);
+    }
+
+    .numero {
+        font-family: var(--fuente-display);
+        color: var(--rojo-konce);
+        font-size: 1.2rem;
+        line-height: 1;
+        flex-shrink: 0;
+    }
+
+    .lista-categorias {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .lista-categorias a {
+        text-decoration: none;
+        color: var(--carbon);
+        font-family: var(--fuente-display);
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+    }
+
+    .lista-categorias a:hover {
+        color: var(--rojo-konce);
+    }
+
+    .programa-card {
+        display: block;
+        text-decoration: none;
+        color: var(--carbon);
+    }
+
+    .programa-card img {
+        width: 100%;
+        border-radius: 4px;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .programa-card span {
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .programa-card:hover span {
+        color: var(--rojo-konce);
+    }
+
+    .boton-youtube-sidebar {
+        display: block;
+        text-align: center;
+        background: var(--rojo-konce);
+        color: white;
+        text-decoration: none;
+        padding: 12px;
+        border-radius: 4px;
+        font-family: var(--fuente-display);
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .boton-youtube-sidebar:hover {
+        background: var(--rojo-konce-oscuro);
+    }
+</style>

@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import NewsCard from '../components/NewsCard.astro';
 import ViewfinderFrame from '../components/ViewfinderFrame.astro';
+import Sidebar from '../components/Sidebar.astro';
 import { getCollection } from 'astro:content';
 
 const noticias = (await getCollection('noticias')).sort(
@@ -12,49 +13,55 @@ const [destacada, ...resto] = noticias;
 
 <Layout title="Noticias al Instante">
     <main class="contenedor pagina">
-        {destacada && (
-            <section class="destacada">
-                <ViewfinderFrame>
-                    <a href={`/noticias/${destacada.id}`} class="destacada-imagen-link">
-                        <img
-                            src={destacada.data.imagen || '/placeholder.svg'}
-                            alt={destacada.data.titulo}
-                            class="destacada-imagen"
-                        />
-                        <div class="destacada-chyron">
-                            <span class="destacada-categoria">{destacada.data.categoria}</span>
-                            <h1 class="destacada-titulo">{destacada.data.titulo}</h1>
+        <div class="layout-con-sidebar">
+            <div class="columna-principal">
+                {destacada && (
+                    <section class="destacada">
+                        <ViewfinderFrame>
+                            <a href={`/noticias/${destacada.id}`} class="destacada-imagen-link">
+                                <img
+                                    src={destacada.data.imagen || '/placeholder.svg'}
+                                    alt={destacada.data.titulo}
+                                    class="destacada-imagen"
+                                />
+                                <div class="destacada-chyron">
+                                    <span class="destacada-categoria">{destacada.data.categoria}</span>
+                                    <h1 class="destacada-titulo">{destacada.data.titulo}</h1>
+                                </div>
+                            </a>
+                        </ViewfinderFrame>
+                        <p class="destacada-resumen">{destacada.data.resumen}</p>
+                    </section>
+                )}
+
+                <section class="ultimas">
+                    <h2 class="ultimas-titulo">Últimas Noticias</h2>
+
+                    {noticias.length === 0 && (
+                        <div class="vacio">
+                            <p>Todavía no hay noticias publicadas — el pipeline automático está por comenzar a publicar.</p>
+                            <a href="https://www.youtube.com/@KoncevisionTV" target="_blank" rel="noopener noreferrer" class="vacio-cta">
+                                ▶ Mientras tanto, síguenos en YouTube
+                            </a>
                         </div>
-                    </a>
-                </ViewfinderFrame>
-                <p class="destacada-resumen">{destacada.data.resumen}</p>
-            </section>
-        )}
+                    )}
 
-        <section class="ultimas">
-            <h2 class="ultimas-titulo">Últimas Noticias</h2>
-
-            {noticias.length === 0 && (
-                <div class="vacio">
-                    <p>Todavía no hay noticias publicadas — el pipeline automático está por comenzar a publicar.</p>
-                    <a href="https://www.youtube.com/@KoncevisionTV" target="_blank" rel="noopener noreferrer" class="vacio-cta">
-                        ▶ Mientras tanto, síguenos en YouTube
-                    </a>
-                </div>
-            )}
-
-            <div class="noticias-grid">
-                {resto.map((noticia) => (
-                    <NewsCard
-                        categoria={noticia.data.categoria}
-                        enlace={`/noticias/${noticia.id}`}
-                        imagenUrl={noticia.data.imagen}
-                        resumen={noticia.data.resumen}
-                        titulo={noticia.data.titulo}
-                    />
-                ))}
+                    <div class="noticias-grid">
+                        {resto.map((noticia) => (
+                            <NewsCard
+                                categoria={noticia.data.categoria}
+                                enlace={`/noticias/${noticia.id}`}
+                                imagenUrl={noticia.data.imagen}
+                                resumen={noticia.data.resumen}
+                                titulo={noticia.data.titulo}
+                            />
+                        ))}
+                    </div>
+                </section>
             </div>
-        </section>
+
+            <Sidebar />
+        </div>
     </main>
 </Layout>
 
