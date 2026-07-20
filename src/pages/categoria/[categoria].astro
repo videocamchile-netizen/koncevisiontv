@@ -1,0 +1,57 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import NewsCard from '../../components/NewsCard.astro';
+import { CATEGORIAS, slugCategoria } from '../../data/categorias.mjs';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+    return CATEGORIAS.map((categoria) => ({
+        params: { categoria: slugCategoria(categoria) },
+        props: { categoria },
+    }));
+}
+
+const { categoria } = Astro.props;
+const noticias = (await getCollection('noticias', ({ data }) => data.categoria === categoria)).sort(
+    (a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf(),
+);
+---
+
+<Layout title={categoria} description={`Últimas noticias de ${categoria} en Koncevision TV.`}>
+    <main class="contenedor pagina-categoria">
+        <h1 class="categoria-titulo">{categoria}</h1>
+
+        {noticias.length === 0 && (
+            <p class="vacio-categoria">Todavía no hay noticias publicadas en esta categoría. Vuelve pronto.</p>
+        )}
+
+        <div class="noticias-grid">
+            {noticias.map((noticia) => (
+                <NewsCard
+                    categoria={noticia.data.categoria}
+                    enlace={`/noticias/${noticia.id}`}
+                    imagenUrl={noticia.data.imagen}
+                    resumen={noticia.data.resumen}
+                    titulo={noticia.data.titulo}
+                />
+            ))}
+        </div>
+    </main>
+</Layout>
+
+<style>
+    .pagina-categoria {
+        padding: 32px 20px;
+    }
+
+    .categoria-titulo {
+        border-bottom: 3px solid var(--rojo-konce);
+        padding-bottom: 10px;
+        margin-bottom: 24px;
+        font-size: 2rem;
+    }
+
+    .vacio-categoria {
+        color: #6b7280;
+    }
+</style>

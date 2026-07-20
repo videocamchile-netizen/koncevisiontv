@@ -8,25 +8,31 @@
             <span class="marca-nombre">KONCE<strong>VISION</strong> TV.CL</span>
         </a>
 
-        <nav class="site-nav">
-            <a href="/">Inicio</a>
-            <a href="/publicidad">Publicidad</a>
-            <a
-                href="https://www.youtube.com/@KoncevisionTV"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="boton-youtube"
-            >
-                ▶ Síguenos en YouTube
-            </a>
-        </nav>
+        <a
+            href="https://www.youtube.com/@KoncevisionTV"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="boton-youtube"
+        >
+            ▶ Síguenos en YouTube
+        </a>
     </div>
+
+    <nav class="categorias-nav">
+        <div class="contenedor categorias-lista">
+            <a href="/">Inicio</a>
+            <a href="/categoria/nacional">Nacional</a>
+            <a href="/categoria/internacional">Internacional</a>
+            <a href="/categoria/economia">Economía</a>
+            <a href="https://www.youtube.com/@KoncevisionTV" target="_blank" rel="noopener noreferrer">Último Programa</a>
+            <a href="/publicidad">Publicidad</a>
+        </div>
+    </nav>
 </header>
 
 <style>
     .site-header {
         background: var(--azul-estudio);
-        border-bottom: 3px solid var(--rojo-konce);
     }
 
     .barra {
@@ -70,25 +76,6 @@
         color: var(--rojo-konce);
     }
 
-    .site-nav {
-        display: flex;
-        align-items: center;
-        gap: 24px;
-        font-family: var(--fuente-display);
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
-        font-size: 0.95rem;
-    }
-
-    .site-nav > a:not(.boton-youtube) {
-        color: var(--blanco-senal);
-        text-decoration: none;
-    }
-
-    .site-nav > a:not(.boton-youtube):hover {
-        color: var(--rojo-konce);
-    }
-
     .boton-youtube {
         background: var(--rojo-konce);
         color: var(--blanco-senal);
@@ -96,9 +83,39 @@
         padding: 8px 16px;
         border-radius: 4px;
         white-space: nowrap;
+        font-family: var(--fuente-display);
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
     }
 
     .boton-youtube:hover {
         background: var(--rojo-konce-oscuro);
+    }
+
+    .categorias-nav {
+        background: var(--carbon);
+        border-top: 1px solid var(--azul-medianoche);
+        border-bottom: 3px solid var(--rojo-konce);
+        overflow-x: auto;
+    }
+
+    .categorias-lista {
+        display: flex;
+        gap: 28px;
+        padding: 12px 20px;
+        white-space: nowrap;
+        font-family: var(--fuente-display);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        font-size: 0.95rem;
+    }
+
+    .categorias-lista a {
+        color: var(--blanco-senal);
+        text-decoration: none;
+    }
+
+    .categorias-lista a:hover {
+        color: var(--rojo-konce);
     }
 </style>

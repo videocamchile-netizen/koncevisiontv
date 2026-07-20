@@ -3,21 +3,11 @@ import path from 'node:path';
 import { XMLParser } from 'fast-xml-parser';
 import matter from 'gray-matter';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { CATEGORIAS } from '../src/data/categorias.mjs';
 
 const NOTICIAS_DIR = path.join(process.cwd(), 'src/content/noticias');
 const SOURCES_PATH = path.join(process.cwd(), 'sources.json');
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
-const CATEGORIAS = [
-    'Nacional',
-    'Regional',
-    'Policial',
-    'Política',
-    'Deportes',
-    'Tecnología',
-    'Entretención',
-    'Internacional',
-    'Economía',
-];
 
 if (!process.env.GEMINI_API_KEY) {
     console.error('Falta la variable de entorno GEMINI_API_KEY.');
