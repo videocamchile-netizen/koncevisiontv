@@ -3,7 +3,7 @@ import path from 'node:path';
 import matter from 'gray-matter';
 
 const NOTICIAS_DIR = path.join(process.cwd(), 'src/content/noticias');
-const DIAS_MAXIMOS = 30;
+const DIAS_MAXIMOS = 7;
 
 function main() {
     const ahora = Date.now();
