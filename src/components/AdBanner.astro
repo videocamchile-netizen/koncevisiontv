@@ -1,0 +1,13 @@
+---
+interface Props {
+    ubicacion: string;
+}
+const { ubicacion } = Astro.props;
+---
+
+<div style="background: #e5e7eb; border: 2px dashed #9ca3af; text-align: center; padding: 20px; margin: 30px 0; border-radius: 8px;">
+    <p style="color: #6b7280; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Espacio Publicitario - {ubicacion}</p>
+    <a href="/publicidad" style="color: #2563eb; font-weight: bold; text-decoration: none; font-size: 14px;">
+        Anuncia tu marca aquí. Clic para ver nuestro Media Kit.
+    </a>
+</div>

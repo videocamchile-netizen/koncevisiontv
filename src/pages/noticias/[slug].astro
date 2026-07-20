@@ -1,0 +1,48 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AdBanner from '../../components/AdBanner.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+    const noticias = await getCollection('noticias');
+    return noticias.map((noticia) => ({
+        params: { slug: noticia.id },
+        props: { noticia },
+    }));
+}
+
+const { noticia } = Astro.props;
+const { Content } = await render(noticia);
+const { titulo, resumen, categoria, imagen, imagenCredito, fuenteNombre, fuenteUrl, fecha } = noticia.data;
+---
+
+<Layout title={titulo} description={resumen} image={imagen} type="article" publishedTime={fecha}>
+    <header style="background: #111827; color: white; padding: 20px; text-align: center;">
+        <a href="/" style="color: white; text-decoration: none; font-size: 1.25rem; font-weight: bold;">Koncevision TV</a>
+    </header>
+
+    <main style="max-width: 800px; margin: 0 auto; padding: 20px;">
+        <span style="background: #ef4444; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; text-transform: uppercase;">
+            {categoria}
+        </span>
+        <h1 style="font-size: 2rem; margin: 15px 0;">{titulo}</h1>
+        <p style="color: #6b7280; font-size: 14px;">
+            {fecha.toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}
+        </p>
+
+        {imagen && <img src={imagen} alt={titulo} style="width: 100%; border-radius: 8px; margin: 20px 0; display: block;" />}
+        {imagenCredito && <p style="color: #9ca3af; font-size: 12px; margin-top: -15px;">Crédito imagen: {imagenCredito}</p>}
+
+        <article style="line-height: 1.8; font-size: 1.1rem; color: #1f2937;">
+            <Content />
+        </article>
+
+        <p style="margin-top: 30px; padding: 15px; background: #f3f4f6; border-radius: 8px; font-size: 14px; color: #4b5563;">
+            Fuente original: <a href={fuenteUrl} target="_blank" rel="noopener noreferrer nofollow" style="color: #2563eb;">{fuenteNombre}</a>
+        </p>
+
+        <AdBanner ubicacion="Medio Artículo (Intersticial)" />
+
+        <p style="margin-top: 20px;"><a href="/" style="color: #2563eb; text-decoration: none;">&larr; Volver a Últimas Noticias</a></p>
+    </main>
+</Layout>

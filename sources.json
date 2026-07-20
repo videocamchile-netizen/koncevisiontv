@@ -1,0 +1,9 @@
+[
+  {
+    "id": "biobiochile",
+    "nombre": "BioBioChile",
+    "tipo": "rss",
+    "url": "https://www.biobiochile.cl/static/feed-google",
+    "activo": true
+  }
+]
