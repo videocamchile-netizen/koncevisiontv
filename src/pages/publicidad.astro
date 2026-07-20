@@ -7,6 +7,8 @@ import Layout from '../layouts/Layout.astro';
         <h1 class="titulo-publicidad">Impulsa tu marca con nosotros</h1>
         <p class="intro-publicidad">Llega a miles de lectores diarios publicando en nuestra red de noticias automatizada. Cuéntanos qué necesitas y te enviamos nuestros planes y valores.</p>
 
+        <video class="video-demo" src="/publicidad-demo.mp4" controls preload="metadata"></video>
+
         <section class="contacto">
             <h2>Contacto Comercial</h2>
             <form class="form-contacto">
@@ -35,6 +37,15 @@ import Layout from '../layouts/Layout.astro';
         font-size: 1.1rem;
         margin: 0;
         max-width: 640px;
+    }
+
+    .video-demo {
+        width: 100%;
+        max-width: 640px;
+        display: block;
+        margin-top: 30px;
+        border-radius: 4px;
+        background: var(--azul-estudio);
     }
 
     .contacto {
