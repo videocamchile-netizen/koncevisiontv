@@ -5,9 +5,35 @@ interface Props {
 const { ubicacion } = Astro.props;
 ---
 
-<div style="background: #e5e7eb; border: 2px dashed #9ca3af; text-align: center; padding: 20px; margin: 30px 0; border-radius: 8px;">
-    <p style="color: #6b7280; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Espacio Publicitario - {ubicacion}</p>
-    <a href="/publicidad" style="color: #2563eb; font-weight: bold; text-decoration: none; font-size: 14px;">
-        Anuncia tu marca aquí. Clic para ver nuestro Media Kit.
-    </a>
+<div class="ad-banner">
+    <p class="ad-eyebrow eyebrow">Publicidad · {ubicacion}</p>
+    <a href="/publicidad" class="ad-cta">Anuncia tu marca aquí. Clic para ver nuestro Media Kit.</a>
 </div>
+
+<style>
+    .ad-banner {
+        background: var(--blanco-senal);
+        border: 1px solid var(--borde-suave);
+        border-left: 4px solid var(--rojo-konce);
+        text-align: center;
+        padding: 20px;
+        margin: 30px 0;
+        border-radius: 4px;
+    }
+
+    .ad-eyebrow {
+        color: var(--gris-metalico);
+        margin: 0 0 8px 0;
+    }
+
+    .ad-cta {
+        color: var(--azul-estudio);
+        font-weight: 600;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .ad-cta:hover {
+        color: var(--rojo-konce);
+    }
+</style>

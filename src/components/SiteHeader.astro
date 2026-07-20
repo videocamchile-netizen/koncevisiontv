@@ -1,0 +1,96 @@
+---
+---
+
+<header class="site-header">
+    <div class="contenedor barra">
+        <a href="/" class="marca">
+            <img src="/logo-koncevision.jpg" alt="Koncevision TV" class="marca-logo" width="44" height="44" />
+            <span class="marca-nombre">KONCE<strong>VISION</strong> TV</span>
+        </a>
+
+        <nav class="site-nav">
+            <a href="/">Inicio</a>
+            <a href="/publicidad">Publicidad</a>
+            <a
+                href="https://www.youtube.com/@KoncevisionTV"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="boton-youtube"
+            >
+                ▶ Síguenos en YouTube
+            </a>
+        </nav>
+    </div>
+</header>
+
+<style>
+    .site-header {
+        background: var(--azul-estudio);
+        border-bottom: 3px solid var(--rojo-konce);
+    }
+
+    .barra {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 16px 20px;
+        flex-wrap: wrap;
+    }
+
+    .marca {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        color: var(--blanco-senal);
+    }
+
+    .marca-logo {
+        border-radius: 50%;
+        display: block;
+    }
+
+    .marca-nombre {
+        font-family: var(--fuente-display);
+        font-size: 1.3rem;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+    }
+
+    .marca-nombre strong {
+        color: var(--rojo-konce);
+    }
+
+    .site-nav {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        font-family: var(--fuente-display);
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        font-size: 0.95rem;
+    }
+
+    .site-nav > a:not(.boton-youtube) {
+        color: var(--blanco-senal);
+        text-decoration: none;
+    }
+
+    .site-nav > a:not(.boton-youtube):hover {
+        color: var(--rojo-konce);
+    }
+
+    .boton-youtube {
+        background: var(--rojo-konce);
+        color: var(--blanco-senal);
+        text-decoration: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        white-space: nowrap;
+    }
+
+    .boton-youtube:hover {
+        background: var(--rojo-konce-oscuro);
+    }
+</style>

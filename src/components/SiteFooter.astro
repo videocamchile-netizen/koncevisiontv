@@ -1,0 +1,81 @@
+---
+const anio = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+    <div class="contenedor pie-grid">
+        <div>
+            <p class="pie-marca">KONCE<strong>VISION</strong> TV</p>
+            <p class="pie-texto">Noticias al instante, redactadas y publicadas de forma automática a partir de fuentes públicas, siempre con atribución a la fuente original.</p>
+        </div>
+
+        <nav class="pie-nav">
+            <a href="/">Inicio</a>
+            <a href="/publicidad">Publicidad</a>
+            <a href="/rss.xml">RSS</a>
+            <a href="https://www.youtube.com/@KoncevisionTV" target="_blank" rel="noopener noreferrer">YouTube</a>
+        </nav>
+    </div>
+    <p class="pie-legal contenedor">© {anio} Koncevision TV.</p>
+</footer>
+
+<style>
+    .site-footer {
+        background: var(--azul-estudio);
+        color: var(--gris-metalico);
+        margin-top: 60px;
+        padding: 40px 0 20px;
+    }
+
+    .pie-grid {
+        display: flex;
+        justify-content: space-between;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+
+    .pie-marca {
+        font-family: var(--fuente-display);
+        color: var(--blanco-senal);
+        font-size: 1.2rem;
+        letter-spacing: 0.03em;
+        margin: 0 0 10px 0;
+    }
+
+    .pie-marca strong {
+        color: var(--rojo-konce);
+    }
+
+    .pie-texto {
+        max-width: 420px;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .pie-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        font-family: var(--fuente-display);
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .pie-nav a {
+        color: var(--blanco-senal);
+        text-decoration: none;
+    }
+
+    .pie-nav a:hover {
+        color: var(--rojo-konce);
+    }
+
+    .pie-legal {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid var(--azul-medianoche);
+        font-family: var(--fuente-mono);
+        font-size: 0.75rem;
+    }
+</style>

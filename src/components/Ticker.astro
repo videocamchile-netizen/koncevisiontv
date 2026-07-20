@@ -1,0 +1,112 @@
+---
+import { getCollection } from 'astro:content';
+
+const noticias = (await getCollection('noticias'))
+    .sort((a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf())
+    .slice(0, 8);
+
+const items =
+    noticias.length > 0
+        ? noticias.map((n) => ({ titulo: n.data.titulo, enlace: `/noticias/${n.id}` }))
+        : [
+              { titulo: 'Bienvenido a Koncevision TV', enlace: '/' },
+              { titulo: 'Muy pronto, noticias al instante', enlace: '/' },
+              { titulo: 'Síguenos en YouTube', enlace: 'https://www.youtube.com/@KoncevisionTV' },
+          ];
+---
+
+<div class="ticker">
+    <span class="ticker-en-vivo"><span class="punto"></span>En Vivo</span>
+    <div class="ticker-pista">
+        <div class="ticker-contenido">
+            {items.map((item) => <a href={item.enlace}>{item.titulo}</a>)}
+            {items.map((item) => <a href={item.enlace} aria-hidden="true" tabindex="-1">{item.titulo}</a>)}
+        </div>
+    </div>
+</div>
+
+<style>
+    .ticker {
+        display: flex;
+        align-items: stretch;
+        background: var(--carbon);
+        color: var(--blanco-senal);
+        font-family: var(--fuente-mono);
+        font-size: 0.8rem;
+        overflow: hidden;
+    }
+
+    .ticker-en-vivo {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--rojo-konce);
+        padding: 8px 16px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .punto {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--blanco-senal);
+        animation: parpadeo 1.4s ease-in-out infinite;
+    }
+
+    .ticker-pista {
+        flex: 1;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+    }
+
+    .ticker-contenido {
+        display: flex;
+        gap: 48px;
+        padding-left: 24px;
+        white-space: nowrap;
+        animation: desplazar 32s linear infinite;
+    }
+
+    .ticker:hover .ticker-contenido {
+        animation-play-state: paused;
+    }
+
+    .ticker-contenido a {
+        color: var(--blanco-senal);
+        text-decoration: none;
+        padding: 8px 0;
+    }
+
+    .ticker-contenido a:hover {
+        color: var(--gris-metalico);
+    }
+
+    @keyframes desplazar {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(-50%);
+        }
+    }
+
+    @keyframes parpadeo {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.25; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .ticker-contenido {
+            animation: none;
+            overflow-x: auto;
+        }
+        .punto {
+            animation: none;
+        }
+    }
+</style>

@@ -1,0 +1,107 @@
+:root {
+    --rojo-konce: #d5121f;
+    --rojo-konce-oscuro: #9e0d18;
+    --azul-estudio: #0e1b2e;
+    --azul-medianoche: #16273f;
+    --blanco-senal: #f4f5f7;
+    --carbon: #14181f;
+    --gris-metalico: #7c8aa0;
+    --borde-suave: #e2e5ea;
+
+    --fuente-display: 'Barlow Condensed', sans-serif;
+    --fuente-cuerpo: 'Barlow', sans-serif;
+    --fuente-mono: 'IBM Plex Mono', monospace;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: var(--fuente-cuerpo);
+    background-color: var(--blanco-senal);
+    color: var(--carbon);
+}
+
+h1, h2, h3 {
+    font-family: var(--fuente-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    margin: 0;
+}
+
+a {
+    color: inherit;
+}
+
+a:focus-visible,
+button:focus-visible {
+    outline: 3px solid var(--rojo-konce);
+    outline-offset: 2px;
+}
+
+.eyebrow {
+    font-family: var(--fuente-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.contenedor {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Marco tipo visor de cámara, tomado del isotipo de Koncevision */
+.visor {
+    position: relative;
+}
+
+.visor .esquina {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    border-color: var(--rojo-konce);
+    z-index: 2;
+}
+
+.visor .esquina.sup-izq {
+    top: -3px;
+    left: -3px;
+    border-top: 4px solid;
+    border-left: 4px solid;
+}
+
+.visor .esquina.sup-der {
+    top: -3px;
+    right: -3px;
+    border-top: 4px solid;
+    border-right: 4px solid;
+}
+
+.visor .esquina.inf-izq {
+    bottom: -3px;
+    left: -3px;
+    border-bottom: 4px solid;
+    border-left: 4px solid;
+}
+
+.visor .esquina.inf-der {
+    bottom: -3px;
+    right: -3px;
+    border-bottom: 4px solid;
+    border-right: 4px solid;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}

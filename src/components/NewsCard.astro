@@ -9,22 +9,76 @@ interface Props {
 const { titulo, resumen, imagenUrl, enlace, categoria } = Astro.props;
 ---
 
-<article style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden;">
-    <a href={enlace} style="display: block;">
-        <img
-            src={imagenUrl || '/placeholder.svg'}
-            alt={titulo}
-            loading="lazy"
-            style="width: 100%; height: 220px; object-fit: cover; display: block;"
-        />
+<article class="tarjeta">
+    <a href={enlace} class="tarjeta-imagen-link">
+        <img src={imagenUrl || '/placeholder.svg'} alt={titulo} loading="lazy" class="tarjeta-imagen" />
+        <span class="tarjeta-categoria">{categoria}</span>
     </a>
-    <div style="padding: 20px;">
-        <span style="background: #ef4444; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; text-transform: uppercase;">
-            {categoria}
-        </span>
-        <h2 style="margin-top: 15px; font-size: 1.5rem;">
-            <a href={enlace} style="color: #111827; text-decoration: none;">{titulo}</a>
+    <div class="tarjeta-cuerpo">
+        <h2 class="tarjeta-titulo">
+            <a href={enlace}>{titulo}</a>
         </h2>
-        <p style="color: #4b5563; line-height: 1.6; margin-top: 10px;">{resumen}</p>
+        <p class="tarjeta-resumen">{resumen}</p>
     </div>
 </article>
+
+<style>
+    .tarjeta {
+        background: white;
+        border: 1px solid var(--borde-suave);
+        border-radius: 4px;
+        margin-bottom: 24px;
+        overflow: hidden;
+    }
+
+    .tarjeta-imagen-link {
+        position: relative;
+        display: block;
+    }
+
+    .tarjeta-imagen {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .tarjeta-categoria {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        background: var(--rojo-konce);
+        color: white;
+        font-family: var(--fuente-display);
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        padding: 4px 12px;
+    }
+
+    .tarjeta-cuerpo {
+        padding: 20px;
+    }
+
+    .tarjeta-titulo {
+        font-size: 1.4rem;
+        line-height: 1.2;
+    }
+
+    .tarjeta-titulo a {
+        text-decoration: none;
+        color: var(--carbon);
+    }
+
+    .tarjeta-titulo a:hover {
+        color: var(--rojo-konce);
+    }
+
+    .tarjeta-resumen {
+        font-family: var(--fuente-cuerpo);
+        color: #4b5563;
+        line-height: 1.6;
+        margin-top: 10px;
+    }
+</style>

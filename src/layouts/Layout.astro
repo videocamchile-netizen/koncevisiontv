@@ -1,4 +1,9 @@
 ---
+import '../styles/global.css';
+import Ticker from '../components/Ticker.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
 interface Props {
     title: string;
     description?: string;
@@ -45,6 +50,14 @@ const jsonLd =
         <meta name="description" content={description} />
         <link rel="canonical" href={canonicalURL} />
         <link rel="alternate" type="application/rss+xml" title={siteName} href="/rss.xml" />
+        <link rel="icon" href="/logo-koncevision.jpg" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
+            rel="stylesheet"
+        />
 
         <meta property="og:type" content={type} />
         <meta property="og:title" content={title} />
@@ -60,7 +73,10 @@ const jsonLd =
 
         {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
     </head>
-    <body style="margin: 0; font-family: system-ui, sans-serif; background-color: #f9fafb; color: #111827;">
+    <body>
+        <Ticker />
+        <SiteHeader />
         <slot />
+        <SiteFooter />
     </body>
 </html>
