@@ -1,7 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import NewsCard from '../components/NewsCard.astro';
-import AdBanner from '../components/AdBanner.astro';
 import ViewfinderFrame from '../components/ViewfinderFrame.astro';
 import { getCollection } from 'astro:content';
 
@@ -32,8 +31,6 @@ const [destacada, ...resto] = noticias;
             </section>
         )}
 
-        <AdBanner ubicacion="Cabecera Principal (800x150)" />
-
         <section class="ultimas">
             <h2 class="ultimas-titulo">Últimas Noticias</h2>
 
@@ -58,8 +55,6 @@ const [destacada, ...resto] = noticias;
                 ))}
             </div>
         </section>
-
-        <AdBanner ubicacion="Medio Artículo (Intersticial)" />
     </main>
 </Layout>
 

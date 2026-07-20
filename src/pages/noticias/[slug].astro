@@ -1,6 +1,5 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import AdBanner from '../../components/AdBanner.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -38,8 +37,6 @@ const { titulo, resumen, categoria, imagen, imagenCredito, fuenteNombre, fuenteU
             <p class="fuente-box">
                 Fuente original: <a href={fuenteUrl} target="_blank" rel="noopener noreferrer nofollow">{fuenteNombre}</a>
             </p>
-
-            <AdBanner ubicacion="Medio Artículo (Intersticial)" />
 
             <a href="/" class="volver">&larr; Volver a Últimas Noticias</a>
         </div>

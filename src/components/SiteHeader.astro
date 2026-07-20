@@ -4,8 +4,8 @@
 <header class="site-header">
     <div class="contenedor barra">
         <a href="/" class="marca">
-            <img src="/logo-koncevision.jpg" alt="Koncevision TV" class="marca-logo" width="44" height="44" />
-            <span class="marca-nombre">KONCE<strong>VISION</strong> TV</span>
+            <img src="/logo-koncevision.jpg" alt="Koncevision TV" class="marca-logo" width="64" height="64" />
+            <span class="marca-nombre">KONCE<strong>VISION</strong> TV.CL</span>
         </a>
 
         <nav class="site-nav">
@@ -53,9 +53,15 @@
 
     .marca-nombre {
         font-family: var(--fuente-display);
-        font-size: 1.3rem;
+        font-size: 1.9rem;
         letter-spacing: 0.03em;
         text-transform: uppercase;
+    }
+
+    @media (max-width: 480px) {
+        .marca-nombre {
+            font-size: 1.4rem;
+        }
     }
 
     .marca-nombre strong {
