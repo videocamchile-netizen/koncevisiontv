@@ -11,7 +11,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "generar-noticias": "node scripts/generar-noticias.mjs",
-    "limpiar-noticias": "node scripts/limpiar-noticias.mjs"
+    "limpiar-noticias": "node scripts/limpiar-noticias.mjs",
+    "actualizar-ultimo-programa": "node scripts/actualizar-ultimo-programa.mjs"
   },
   "dependencies": {
     "astro": "^7.1.3",

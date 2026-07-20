@@ -1,0 +1,119 @@
+---
+import Layout from '../layouts/Layout.astro';
+import programa from '../data/ultimo-programa.json';
+
+const miniatura = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.jpg`;
+---
+
+<Layout title="Último Programa" description={programa.titulo} image={miniatura}>
+    <main class="contenedor pagina-programa">
+        <h1 class="programa-titulo">Último Programa</h1>
+        <p class="programa-subtitulo">{programa.titulo}</p>
+
+        <div class="reproductor" data-video-id={programa.videoId}>
+            <img src={miniatura} alt={programa.titulo} class="miniatura" loading="lazy" />
+            <button type="button" class="boton-play" aria-label="Reproducir video">
+                <span class="triangulo"></span>
+            </button>
+        </div>
+
+        <a
+            href={`https://www.youtube.com/watch?v=${programa.videoId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="ver-en-youtube"
+        >
+            Ver en YouTube ↗
+        </a>
+    </main>
+</Layout>
+
+<script>
+    document.querySelectorAll('.reproductor').forEach((contenedor) => {
+        contenedor.querySelector('.boton-play')?.addEventListener('click', () => {
+            const videoId = contenedor.dataset.videoId;
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            iframe.title = 'Reproductor de YouTube';
+            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+            iframe.allowFullscreen = true;
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = '0';
+            contenedor.replaceChildren(iframe);
+        });
+    });
+</script>
+
+<style>
+    .pagina-programa {
+        padding: 40px 20px;
+    }
+
+    .programa-titulo {
+        font-size: 2rem;
+        margin-bottom: 6px;
+    }
+
+    .programa-subtitulo {
+        color: #4b5563;
+        font-size: 1.1rem;
+        margin: 0 0 24px 0;
+    }
+
+    .reproductor {
+        position: relative;
+        aspect-ratio: 16 / 9;
+        background: var(--azul-estudio);
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .miniatura {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .boton-play {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(14, 27, 46, 0.35);
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .triangulo {
+        width: 0;
+        height: 0;
+        border-top: 20px solid transparent;
+        border-bottom: 20px solid transparent;
+        border-left: 34px solid white;
+        margin-left: 8px;
+        filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+    }
+
+    .boton-play:hover .triangulo {
+        border-left-color: var(--rojo-konce);
+    }
+
+    .ver-en-youtube {
+        display: inline-block;
+        margin-top: 20px;
+        color: var(--azul-estudio);
+        text-decoration: none;
+        font-family: var(--fuente-display);
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .ver-en-youtube:hover {
+        color: var(--rojo-konce);
+    }
+</style>

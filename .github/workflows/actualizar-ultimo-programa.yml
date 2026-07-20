@@ -1,0 +1,30 @@
+name: Actualizar último programa
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+
+      - run: node scripts/actualizar-ultimo-programa.mjs
+
+      - name: Commit y push si hay un programa nuevo
+        run: |
+          git config user.name "koncevision-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add src/data/ultimo-programa.json
+          git diff --staged --quiet || (git commit -m "Actualizar último programa" && git push)
