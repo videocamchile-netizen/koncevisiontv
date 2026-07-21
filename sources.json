@@ -5,5 +5,12 @@
     "tipo": "rss",
     "url": "https://www.biobiochile.cl/static/feed-google",
     "activo": true
+  },
+  {
+    "id": "exante",
+    "nombre": "Ex-Ante",
+    "tipo": "rss",
+    "url": "https://www.ex-ante.cl/feed/",
+    "activo": true
   }
 ]
