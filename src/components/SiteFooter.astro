@@ -1,4 +1,6 @@
 ---
+import VisitCounter from './VisitCounter.astro';
+
 const anio = new Date().getFullYear();
 ---
 
@@ -16,7 +18,10 @@ const anio = new Date().getFullYear();
             <a href="https://www.youtube.com/@KoncevisionTV" target="_blank" rel="noopener noreferrer">YouTube</a>
         </nav>
     </div>
-    <p class="pie-legal contenedor">© {anio} Koncevision TV.cl</p>
+    <div class="pie-legal contenedor pie-legal-fila">
+        <p>© {anio} Koncevision TV.cl</p>
+        <VisitCounter />
+    </div>
 </footer>
 
 <style>
@@ -77,5 +82,17 @@ const anio = new Date().getFullYear();
         border-top: 1px solid var(--azul-medianoche);
         font-family: var(--fuente-mono);
         font-size: 0.75rem;
+    }
+
+    .pie-legal-fila {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .pie-legal-fila p {
+        margin: 0;
     }
 </style>

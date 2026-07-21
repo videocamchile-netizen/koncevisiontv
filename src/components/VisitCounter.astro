@@ -1,0 +1,46 @@
+---
+---
+
+<div class="contador-visitas" id="contador-visitas" aria-live="polite">
+    <span class="contador-etiqueta">Visitas</span>
+    <span class="contador-numero" id="contador-numero">···</span>
+</div>
+
+<script>
+    const NAMESPACE = 'koncevisiontv';
+    const KEY = 'visitas-totales';
+    const contenedor = document.getElementById('contador-visitas');
+    const numero = document.getElementById('contador-numero');
+
+    fetch(`https://abacus.jasoncameron.dev/hit/${NAMESPACE}/${KEY}`)
+        .then((respuesta) => respuesta.json())
+        .then((datos) => {
+            if (numero && typeof datos.value === 'number') {
+                numero.textContent = datos.value.toLocaleString('es-CL');
+            } else {
+                contenedor?.remove();
+            }
+        })
+        .catch(() => contenedor?.remove());
+</script>
+
+<style>
+    .contador-visitas {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: var(--fuente-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        color: var(--gris-metalico);
+    }
+
+    .contador-etiqueta {
+        text-transform: uppercase;
+    }
+
+    .contador-numero {
+        color: var(--rojo-konce);
+        font-weight: 600;
+    }
+</style>
