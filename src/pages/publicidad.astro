@@ -7,7 +7,10 @@ import Layout from '../layouts/Layout.astro';
         <h1 class="titulo-publicidad">Impulsa tu marca con nosotros</h1>
         <p class="intro-publicidad">Llega a miles de lectores diarios publicando en nuestra red de noticias automatizada. Cuéntanos qué necesitas y te enviamos nuestros planes y valores.</p>
 
-        <video class="video-demo" src="/publicidad-demo.mp4" controls preload="metadata"></video>
+        <div class="videos-demo">
+            <video class="video-demo video-demo-horizontal" src="/publicidad-demo.mp4" controls preload="metadata"></video>
+            <video class="video-demo video-demo-vertical" src="/publicidad-demo-vertical.mp4" controls preload="metadata"></video>
+        </div>
 
         <section class="contacto">
             <h2>Contacto Comercial</h2>
@@ -49,13 +52,33 @@ import Layout from '../layouts/Layout.astro';
         max-width: 640px;
     }
 
-    .video-demo {
-        width: 100%;
-        max-width: 640px;
-        display: block;
+    .videos-demo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 24px;
         margin-top: 30px;
+    }
+
+    .video-demo {
+        display: block;
         border-radius: 4px;
         background: var(--azul-estudio);
+    }
+
+    .video-demo-horizontal {
+        flex: 3 1 320px;
+        max-width: 480px;
+        aspect-ratio: 16 / 9;
+        width: 100%;
+    }
+
+    .video-demo-vertical {
+        flex: 1 1 140px;
+        max-width: 220px;
+        aspect-ratio: 480 / 880;
+        width: 100%;
     }
 
     .contacto {
