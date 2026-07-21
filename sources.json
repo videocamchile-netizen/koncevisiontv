@@ -12,5 +12,12 @@
     "tipo": "rss",
     "url": "https://www.ex-ante.cl/feed/",
     "activo": true
+  },
+  {
+    "id": "gobcl",
+    "nombre": "Gobierno de Chile",
+    "tipo": "rss",
+    "url": "https://www.gob.cl/noticias/feed/",
+    "activo": true
   }
 ]
