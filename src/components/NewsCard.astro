@@ -5,8 +5,10 @@ interface Props {
     imagenUrl?: string;
     enlace: string;
     categoria: string;
+    fecha: Date;
 }
-const { titulo, resumen, imagenUrl, enlace, categoria } = Astro.props;
+const { titulo, resumen, imagenUrl, enlace, categoria, fecha } = Astro.props;
+const fechaFormateada = fecha.toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
 
 <article class="tarjeta">
@@ -18,6 +20,7 @@ const { titulo, resumen, imagenUrl, enlace, categoria } = Astro.props;
         <h2 class="tarjeta-titulo">
             <a href={enlace}>{titulo}</a>
         </h2>
+        <p class="tarjeta-fecha">{fechaFormateada}</p>
         <p class="tarjeta-resumen">{resumen}</p>
     </div>
 </article>
@@ -80,5 +83,12 @@ const { titulo, resumen, imagenUrl, enlace, categoria } = Astro.props;
         color: #4b5563;
         line-height: 1.6;
         margin-top: 10px;
+    }
+
+    .tarjeta-fecha {
+        font-family: var(--fuente-cuerpo);
+        color: #9ca3af;
+        font-size: 0.82rem;
+        margin-top: 6px;
     }
 </style>

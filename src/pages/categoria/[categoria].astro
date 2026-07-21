@@ -36,6 +36,7 @@ const noticias = (await getCollection('noticias', ({ data }) => data.categoria =
                             imagenUrl={noticia.data.imagen}
                             resumen={noticia.data.resumen}
                             titulo={noticia.data.titulo}
+                            fecha={noticia.data.fecha}
                         />
                     ))}
                 </div>
