@@ -72,6 +72,27 @@ function extraerImagen(item) {
     };
 }
 
+async function extraerImagenDePagina(url) {
+    try {
+        const respuesta = await fetch(url, {
+            headers: { 'User-Agent': 'Mozilla/5.0 (compatible; KoncevisionBot/1.0; +https://koncevisiontv.vercel.app)' },
+            signal: AbortSignal.timeout(8000),
+        });
+        if (!respuesta.ok) return undefined;
+        const html = await respuesta.text();
+        const metaTags = html.match(/<meta[^>]+>/gi) || [];
+        for (const tag of metaTags) {
+            if (/(property|name)=["'](og:image|twitter:image)["']/i.test(tag)) {
+                const contenido = tag.match(/content=["']([^"']+)["']/i);
+                if (contenido) return contenido[1];
+            }
+        }
+        return undefined;
+    } catch {
+        return undefined;
+    }
+}
+
 async function redactarConGemini({ titulo, cuerpoOriginal, fuenteNombre }) {
     const prompt = `Eres redactor del portal de noticias Koncevision TV. A partir de la siguiente noticia de ${fuenteNombre}, escribe una versión ORIGINAL (no copies frases textuales del original) en español chileno neutro.
 
@@ -123,7 +144,11 @@ async function procesarFuente(fuente) {
             const cuerpoOriginal = limpiarHtml(String(cuerpoOriginalHtml));
             if (!cuerpoOriginal) continue;
 
-            const { url: imagenUrl, credito: imagenCredito } = extraerImagen(item);
+            let { url: imagenUrl, credito: imagenCredito } = extraerImagen(item);
+            if (!imagenUrl) {
+                imagenUrl = await extraerImagenDePagina(enlaceOriginal);
+                if (imagenUrl && !imagenCredito) imagenCredito = fuente.nombre;
+            }
             const redactado = await redactarConGemini({
                 titulo: item.title,
                 cuerpoOriginal,
