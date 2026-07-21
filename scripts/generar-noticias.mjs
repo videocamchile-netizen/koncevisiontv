@@ -7,7 +7,7 @@ import { CATEGORIAS } from '../src/data/categorias.mjs';
 
 const NOTICIAS_DIR = path.join(process.cwd(), 'src/content/noticias');
 const SOURCES_PATH = path.join(process.cwd(), 'sources.json');
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-flash-latest';
 const MAX_NUEVAS_POR_FUENTE = Number(process.env.MAX_NUEVAS_POR_FUENTE) || 5;
 
 if (!process.env.GEMINI_API_KEY) {
@@ -18,6 +18,15 @@ if (!process.env.GEMINI_API_KEY) {
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
 const xmlParser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '@_' });
+
+const GEMINI_RATE_LIMIT_MS = 13000;
+let ultimaLlamadaGemini = 0;
+
+async function esperarCupoGemini() {
+    const espera = ultimaLlamadaGemini + GEMINI_RATE_LIMIT_MS - Date.now();
+    if (espera > 0) await new Promise((resolve) => setTimeout(resolve, espera));
+    ultimaLlamadaGemini = Date.now();
+}
 
 function slugify(texto) {
     return texto
@@ -81,6 +90,7 @@ Responde SOLO con un JSON válido (sin markdown, sin comentarios) con esta forma
   "categoria": "una de estas opciones exactas: ${CATEGORIAS.join(', ')}"
 }`;
 
+    await esperarCupoGemini();
     const resultado = await model.generateContent(prompt);
     const texto = resultado.response
         .text()
