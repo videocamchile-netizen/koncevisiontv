@@ -2,7 +2,7 @@ name: Limpiar noticias antiguas
 
 on:
   schedule:
-    - cron: '0 6 * * *'
+    - cron: '52 5 * * *'
   workflow_dispatch:
 
 permissions:

@@ -2,7 +2,7 @@ name: Actualizar dólar y UF
 
 on:
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '11 */6 * * *'
   workflow_dispatch:
 
 permissions:
