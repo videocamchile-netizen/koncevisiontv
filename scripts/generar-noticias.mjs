@@ -8,6 +8,7 @@ import { CATEGORIAS } from '../src/data/categorias.mjs';
 const NOTICIAS_DIR = path.join(process.cwd(), 'src/content/noticias');
 const SOURCES_PATH = path.join(process.cwd(), 'sources.json');
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+const MAX_NUEVAS_POR_FUENTE = Number(process.env.MAX_NUEVAS_POR_FUENTE) || 5;
 
 if (!process.env.GEMINI_API_KEY) {
     console.error('Falta la variable de entorno GEMINI_API_KEY.');
@@ -96,6 +97,7 @@ async function procesarFuente(fuente) {
     let creadas = 0;
 
     for (const item of items) {
+        if (creadas >= MAX_NUEVAS_POR_FUENTE) break;
         try {
             const enlaceOriginal = item.link;
             const guidRaw = typeof item.guid === 'object' ? item.guid?.['#text'] : item.guid;
