@@ -21,6 +21,10 @@
     <nav class="categorias-nav">
         <div class="contenedor categorias-lista">
             <a href="/">Inicio</a>
+            <a href="/directo" class="link-directo">
+                <span class="punto-directo"></span>
+                Directo Sin Censura
+            </a>
             <a href="/categoria/nacional">Nacional</a>
             <a href="/categoria/internacional">Internacional</a>
             <a href="/categoria/economia">Economía</a>
@@ -117,5 +121,32 @@
 
     .categorias-lista a:hover {
         color: var(--rojo-konce);
+    }
+
+    .link-directo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--rojo-konce) !important;
+        font-weight: 700;
+    }
+
+    .punto-directo {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--rojo-konce);
+        animation: parpadeo-nav 1.4s ease-in-out infinite;
+    }
+
+    @keyframes parpadeo-nav {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.25; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .punto-directo {
+            animation: none;
+        }
     }
 </style>
