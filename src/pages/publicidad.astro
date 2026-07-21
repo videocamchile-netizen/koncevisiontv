@@ -15,7 +15,17 @@ import Layout from '../layouts/Layout.astro';
                 <input type="text" placeholder="Nombre de tu Empresa" required />
                 <input type="tel" placeholder="Teléfono" required />
                 <input type="email" placeholder="Correo electrónico" required />
-                <textarea placeholder="Cuéntanos qué tipo de publicidad te interesa" rows="4" required></textarea>
+                <select required>
+                    <option value="" selected disabled>¿Qué tipo de publicidad te interesa?</option>
+                    <option value="mencion-youtube">Mención en YouTube</option>
+                    <option value="banner-youtube">Banner en YouTube</option>
+                    <option value="grafica-destacada">Gráfica destacada en el sitio</option>
+                    <option value="spot-video">Spot / Video comercial</option>
+                    <option value="mencion-directo">Mención en "Directo Sin Censura" (transmisión en vivo)</option>
+                    <option value="paquete-combinado">Paquete combinado (varios formatos)</option>
+                    <option value="otro">Otro / no estoy seguro</option>
+                </select>
+                <textarea placeholder="Cuéntanos más detalles (opcional)" rows="4"></textarea>
                 <button type="submit">Enviar Solicitud</button>
             </form>
         </section>
@@ -68,12 +78,18 @@ import Layout from '../layouts/Layout.astro';
     }
 
     .form-contacto input,
+    .form-contacto select,
     .form-contacto textarea {
         padding: 12px;
         border: 1px solid var(--azul-medianoche);
         border-radius: 4px;
         font-family: var(--fuente-cuerpo);
         background: white;
+        color: var(--carbon);
+    }
+
+    .form-contacto select:invalid {
+        color: #6b7280;
     }
 
     .form-contacto button {
