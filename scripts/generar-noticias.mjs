@@ -60,7 +60,10 @@ function normalizarItems(canal) {
 }
 
 async function obtenerItemsDeFuente(fuente) {
-    const respuesta = await fetch(fuente.url, { signal: AbortSignal.timeout(15000) });
+    const respuesta = await fetch(fuente.url, {
+        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; KoncevisionBot/1.0; +https://koncevisiontv.vercel.app)' },
+        signal: AbortSignal.timeout(15000),
+    });
     if (!respuesta.ok) {
         throw new Error(`No se pudo descargar ${fuente.url} (HTTP ${respuesta.status})`);
     }
