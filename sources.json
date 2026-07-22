@@ -19,5 +19,12 @@
     "tipo": "rss",
     "url": "https://www.gob.cl/noticias/feed/",
     "activo": true
+  },
+  {
+    "id": "ciperchile",
+    "nombre": "CIPER Chile",
+    "tipo": "rss",
+    "url": "https://www.ciperchile.cl/feed/",
+    "activo": true
   }
 ]
