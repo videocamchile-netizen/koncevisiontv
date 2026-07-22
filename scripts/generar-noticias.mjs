@@ -7,7 +7,7 @@ import { CATEGORIAS } from '../src/data/categorias.mjs';
 
 const NOTICIAS_DIR = path.join(process.cwd(), 'src/content/noticias');
 const SOURCES_PATH = path.join(process.cwd(), 'sources.json');
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-flash-latest';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-flash-lite-latest';
 const MAX_NUEVAS_POR_FUENTE = Number(process.env.MAX_NUEVAS_POR_FUENTE) || 2;
 
 if (!process.env.GEMINI_API_KEY) {
