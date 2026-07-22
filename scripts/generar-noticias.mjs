@@ -8,7 +8,7 @@ import { CATEGORIAS } from '../src/data/categorias.mjs';
 const NOTICIAS_DIR = path.join(process.cwd(), 'src/content/noticias');
 const SOURCES_PATH = path.join(process.cwd(), 'sources.json');
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-flash-latest';
-const MAX_NUEVAS_POR_FUENTE = Number(process.env.MAX_NUEVAS_POR_FUENTE) || 5;
+const MAX_NUEVAS_POR_FUENTE = Number(process.env.MAX_NUEVAS_POR_FUENTE) || 2;
 
 if (!process.env.GEMINI_API_KEY) {
     console.error('Falta la variable de entorno GEMINI_API_KEY.');
@@ -21,6 +21,12 @@ const xmlParser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: 
 
 const GEMINI_RATE_LIMIT_MS = 13000;
 let ultimaLlamadaGemini = 0;
+
+class CuotaGeminiExcedidaError extends Error {}
+
+function esErrorDeCuota(error) {
+    return /429|quota/i.test(error?.message ?? '');
+}
 
 async function esperarCupoGemini() {
     const espera = ultimaLlamadaGemini + GEMINI_RATE_LIMIT_MS - Date.now();
@@ -112,7 +118,13 @@ Responde SOLO con un JSON válido (sin markdown, sin comentarios) con esta forma
 }`;
 
     await esperarCupoGemini();
-    const resultado = await model.generateContent(prompt, { timeout: 30000 });
+    let resultado;
+    try {
+        resultado = await model.generateContent(prompt, { timeout: 30000 });
+    } catch (error) {
+        if (esErrorDeCuota(error)) throw new CuotaGeminiExcedidaError(error.message);
+        throw error;
+    }
     const texto = resultado.response
         .text()
         .trim()
@@ -171,6 +183,7 @@ async function procesarFuente(fuente) {
             creadas++;
             console.log(`Creada: ${slug}.md`);
         } catch (error) {
+            if (error instanceof CuotaGeminiExcedidaError) throw error;
             console.error(`Error procesando un item de ${fuente.nombre}:`, error.message);
         }
     }
@@ -188,6 +201,10 @@ async function main() {
         try {
             total += await procesarFuente(fuente);
         } catch (error) {
+            if (error instanceof CuotaGeminiExcedidaError) {
+                console.log(`Cuota diaria de Gemini agotada, se corta la corrida (${total} noticia(s) creada(s) antes de cortar).`);
+                break;
+            }
             console.error(`Error con la fuente ${fuente.nombre}:`, error.message);
         }
     }
