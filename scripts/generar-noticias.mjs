@@ -52,7 +52,7 @@ function normalizarItems(canal) {
 }
 
 async function obtenerItemsDeFuente(fuente) {
-    const respuesta = await fetch(fuente.url);
+    const respuesta = await fetch(fuente.url, { signal: AbortSignal.timeout(15000) });
     if (!respuesta.ok) {
         throw new Error(`No se pudo descargar ${fuente.url} (HTTP ${respuesta.status})`);
     }
@@ -112,7 +112,7 @@ Responde SOLO con un JSON válido (sin markdown, sin comentarios) con esta forma
 }`;
 
     await esperarCupoGemini();
-    const resultado = await model.generateContent(prompt);
+    const resultado = await model.generateContent(prompt, { timeout: 30000 });
     const texto = resultado.response
         .text()
         .trim()
