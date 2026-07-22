@@ -25,6 +25,6 @@
     "nombre": "CIPER Chile",
     "tipo": "rss",
     "url": "https://www.ciperchile.cl/feed/",
-    "activo": true
+    "activo": false
   }
 ]
