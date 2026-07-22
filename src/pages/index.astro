@@ -86,7 +86,7 @@ const [destacada, ...resto] = noticias;
 
     .destacada-imagen {
         width: 100%;
-        height: 480px;
+        aspect-ratio: 8 / 5;
         object-fit: cover;
         object-position: top;
         display: block;
@@ -172,7 +172,7 @@ const [destacada, ...resto] = noticias;
 
     @media (max-width: 640px) {
         .destacada-imagen {
-            height: 280px;
+            aspect-ratio: 4 / 3;
         }
         .destacada-titulo {
             font-size: 1.6rem;
