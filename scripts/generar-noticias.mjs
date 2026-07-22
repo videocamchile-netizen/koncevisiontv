@@ -8,6 +8,7 @@ import { CATEGORIAS } from '../src/data/categorias.mjs';
 const NOTICIAS_DIR = path.join(process.cwd(), 'src/content/noticias');
 const SOURCES_PATH = path.join(process.cwd(), 'sources.json');
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-flash-lite-latest';
+const GROQ_MODEL = process.env.GROQ_MODEL || 'llama-3.1-8b-instant';
 const MAX_NUEVAS_POR_FUENTE = Number(process.env.MAX_NUEVAS_POR_FUENTE) || 2;
 
 if (!process.env.GEMINI_API_KEY) {
@@ -21,11 +22,12 @@ const xmlParser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: 
 
 const GEMINI_RATE_LIMIT_MS = 13000;
 let ultimaLlamadaGemini = 0;
+let geminiAgotado = false;
 
 class CuotaGeminiExcedidaError extends Error {}
 
 function esErrorDeCuota(error) {
-    return /429|quota/i.test(error?.message ?? '');
+    return /429|quota|rate limit|too many requests/i.test(error?.message ?? '');
 }
 
 async function esperarCupoGemini() {
@@ -99,8 +101,8 @@ async function extraerImagenDePagina(url) {
     }
 }
 
-async function redactarConGemini({ titulo, cuerpoOriginal, fuenteNombre }) {
-    const prompt = `Eres redactor del portal de noticias Koncevision TV. A partir de la siguiente noticia de ${fuenteNombre}, escribe una versión ORIGINAL (no copies frases textuales del original) en español chileno neutro.
+function construirPrompt({ titulo, cuerpoOriginal, fuenteNombre }) {
+    return `Eres redactor del portal de noticias Koncevision TV. A partir de la siguiente noticia de ${fuenteNombre}, escribe una versión ORIGINAL (no copies frases textuales del original) en español chileno neutro.
 
 Título original: ${titulo}
 
@@ -116,22 +118,61 @@ Responde SOLO con un JSON válido (sin markdown, sin comentarios) con esta forma
   "cuerpo": "cuerpo completo reescrito en 3-5 párrafos, en formato Markdown, sin repetir el resumen",
   "categoria": "una de estas opciones exactas: ${CATEGORIAS.join(', ')}"
 }`;
+}
 
-    await esperarCupoGemini();
-    let resultado;
-    try {
-        resultado = await model.generateContent(prompt, { timeout: 30000 });
-    } catch (error) {
-        if (esErrorDeCuota(error)) throw new CuotaGeminiExcedidaError(error.message);
-        throw error;
-    }
-    const texto = resultado.response
-        .text()
+function limpiarJson(texto) {
+    return texto
         .trim()
         .replace(/^```json\s*/i, '')
         .replace(/^```\s*/i, '')
         .replace(/```$/i, '');
-    return JSON.parse(texto);
+}
+
+async function redactarConGemini(datos) {
+    await esperarCupoGemini();
+    let resultado;
+    try {
+        resultado = await model.generateContent(construirPrompt(datos), { timeout: 30000 });
+    } catch (error) {
+        if (esErrorDeCuota(error)) throw new CuotaGeminiExcedidaError(error.message);
+        throw error;
+    }
+    return JSON.parse(limpiarJson(resultado.response.text()));
+}
+
+async function redactarConGroq(datos) {
+    const respuesta = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            model: GROQ_MODEL,
+            messages: [{ role: 'user', content: construirPrompt(datos) }],
+            response_format: { type: 'json_object' },
+        }),
+        signal: AbortSignal.timeout(30000),
+    });
+    if (!respuesta.ok) {
+        throw new Error(`Groq respondió HTTP ${respuesta.status}: ${await respuesta.text()}`);
+    }
+    const cuerpo = await respuesta.json();
+    return JSON.parse(limpiarJson(cuerpo.choices[0].message.content));
+}
+
+async function redactarNoticia(datos) {
+    if (!geminiAgotado) {
+        try {
+            return await redactarConGemini(datos);
+        } catch (error) {
+            if (!(error instanceof CuotaGeminiExcedidaError)) throw error;
+            geminiAgotado = true;
+            console.log('Cuota diaria de Gemini agotada, el resto de esta corrida usa el respaldo (Groq).');
+            if (!process.env.GROQ_API_KEY) throw error;
+        }
+    }
+    return redactarConGroq(datos);
 }
 
 async function procesarFuente(fuente) {
@@ -161,7 +202,7 @@ async function procesarFuente(fuente) {
                 imagenUrl = await extraerImagenDePagina(enlaceOriginal);
                 if (imagenUrl && !imagenCredito) imagenCredito = fuente.nombre;
             }
-            const redactado = await redactarConGemini({
+            const redactado = await redactarNoticia({
                 titulo: item.title,
                 cuerpoOriginal,
                 fuenteNombre: fuente.nombre,
