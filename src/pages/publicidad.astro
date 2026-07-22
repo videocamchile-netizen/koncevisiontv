@@ -8,6 +8,7 @@ import Layout from '../layouts/Layout.astro';
         <p class="intro-publicidad">Llega a miles de lectores diarios publicando en nuestra red de noticias automatizada. Cuéntanos qué necesitas y te enviamos nuestros planes y valores.</p>
 
         <div class="videos-demo">
+            <video class="video-demo video-demo-vertical" src="/publicidad-demo-vertical-2.mp4" controls preload="metadata"></video>
             <video class="video-demo video-demo-horizontal" src="/publicidad-demo.mp4" controls preload="metadata"></video>
             <video class="video-demo video-demo-vertical" src="/publicidad-demo-vertical.mp4" controls preload="metadata"></video>
         </div>
@@ -54,7 +55,7 @@ import Layout from '../layouts/Layout.astro';
 
     .videos-demo {
         display: flex;
-        align-items: center;
+        align-items: flex-end;
         justify-content: center;
         flex-wrap: wrap;
         gap: 24px;
