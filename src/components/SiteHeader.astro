@@ -17,8 +17,9 @@
             ▶ Síguenos en YouTube
         </a>
     </div>
+</header>
 
-    <nav class="categorias-nav">
+<nav class="categorias-nav">
         <div class="contenedor categorias-lista">
             <a href="/">Inicio</a>
             <a href="/directo" class="link-directo">
@@ -35,7 +36,6 @@
             <a href="/publicidad">Publicidad</a>
         </div>
     </nav>
-</header>
 
 <script>
     (function () {
@@ -122,6 +122,9 @@
     }
 
     .categorias-nav {
+        position: sticky;
+        top: 0;
+        z-index: 50;
         background: var(--carbon);
         border-top: 1px solid var(--azul-medianoche);
         border-bottom: 3px solid var(--rojo-konce);
