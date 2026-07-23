@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Ticker from '../components/Ticker.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import AdSuperior from '../components/AdSuperior.astro';
 
 interface Props {
     title: string;
@@ -10,6 +11,7 @@ interface Props {
     image?: string;
     type?: 'website' | 'article';
     publishedTime?: Date;
+    adSuperior?: boolean;
 }
 
 const siteName = 'Koncevision TV.cl';
@@ -19,6 +21,7 @@ const {
     image = '/placeholder.svg',
     type = 'website',
     publishedTime,
+    adSuperior = false,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -74,6 +77,7 @@ const jsonLd =
         {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
     </head>
     <body>
+        {adSuperior && <AdSuperior />}
         <Ticker />
         <SiteHeader />
         <slot />
