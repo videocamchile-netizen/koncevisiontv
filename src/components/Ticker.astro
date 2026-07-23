@@ -19,7 +19,10 @@ const formatoPesos = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 2, 
 ---
 
 <div class="ticker">
-    <span class="ticker-en-vivo"><span class="punto"></span>En Vivo</span>
+    <span class="ticker-en-vivo">
+        <span class="ticker-en-vivo-linea"><span class="punto"></span>En Vivo</span>
+        <span class="ticker-hora" id="ticker-hora">--:--:--</span>
+    </span>
     <span class="ticker-indicadores">
         <span>USD <strong>${formatoPesos.format(indicadores.dolar)}</strong></span>
         <span>UF <strong>${formatoPesos.format(indicadores.uf)}</strong></span>
@@ -31,6 +34,24 @@ const formatoPesos = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 2, 
         </div>
     </div>
 </div>
+
+<script>
+    const elHora = document.getElementById('ticker-hora');
+    const formateador = new Intl.DateTimeFormat('es-CL', {
+        timeZone: 'America/Santiago',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+    });
+
+    function actualizarHora() {
+        if (elHora) elHora.textContent = formateador.format(new Date());
+    }
+
+    actualizarHora();
+    setInterval(actualizarHora, 1000);
+</script>
 
 <style>
     .ticker {
@@ -46,14 +67,34 @@ const formatoPesos = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 2, 
     .ticker-en-vivo {
         flex-shrink: 0;
         display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 2px;
+        background: var(--rojo-konce);
+        padding: 6px 16px;
+        white-space: nowrap;
+    }
+
+    .ticker-en-vivo-linea {
+        display: flex;
         align-items: center;
         gap: 8px;
-        background: var(--rojo-konce);
-        padding: 8px 16px;
         font-weight: 600;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        white-space: nowrap;
+    }
+
+    .ticker-hora {
+        font-family: var(--fuente-mono);
+        font-size: 0.95rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        color: #ff3b3b;
+        background: var(--carbon);
+        padding: 1px 6px;
+        border-radius: 2px;
+        align-self: flex-start;
+        text-shadow: 0 0 6px rgba(255, 59, 59, 0.65);
     }
 
     .punto {
