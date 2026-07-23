@@ -32,7 +32,7 @@ const miniaturaPrograma = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.
     </section>
 
     <section class="bloque">
-        <h2 class="bloque-titulo">Categorías</h2>
+        <h2 class="bloque-titulo bloque-titulo-serif">Categorías</h2>
         <ul class="lista-categorias">
             {CATEGORIAS_DESTACADAS.map((categoria) => (
                 <li>
@@ -78,6 +78,13 @@ const miniaturaPrograma = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.
         border-bottom: 3px solid var(--rojo-konce);
         padding-bottom: 8px;
         margin-bottom: 14px;
+    }
+
+    .bloque-titulo-serif {
+        font-family: 'Playfair Display', serif;
+        font-weight: 800;
+        text-transform: none;
+        letter-spacing: normal;
     }
 
     .bloque-vacio {
@@ -143,9 +150,10 @@ const miniaturaPrograma = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.
     .lista-categorias a {
         text-decoration: none;
         color: var(--carbon);
-        font-family: var(--fuente-display);
-        text-transform: uppercase;
-        letter-spacing: 0.02em;
+        font-family: 'Playfair Display', serif;
+        font-weight: 600;
+        text-transform: none;
+        letter-spacing: normal;
     }
 
     .lista-categorias a:hover {
@@ -182,9 +190,10 @@ const miniaturaPrograma = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.
         text-decoration: none;
         padding: 12px;
         border-radius: 4px;
-        font-family: var(--fuente-display);
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        text-transform: none;
+        letter-spacing: normal;
     }
 
     .boton-youtube-sidebar:hover {
