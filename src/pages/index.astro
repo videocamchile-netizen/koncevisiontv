@@ -9,6 +9,7 @@ const noticias = (await getCollection('noticias')).sort(
     (a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf(),
 );
 const [destacada, ...resto] = noticias;
+const paraGrid = resto.slice(0, 9);
 ---
 
 <Layout title="Noticias al Instante">
@@ -50,7 +51,7 @@ const [destacada, ...resto] = noticias;
                     )}
 
                     <div class="noticias-grid">
-                        {resto.map((noticia) => (
+                        {paraGrid.map((noticia) => (
                             <NewsCard
                                 categoria={noticia.data.categoria}
                                 enlace={`/noticias/${noticia.id}`}
@@ -143,6 +144,28 @@ const [destacada, ...resto] = noticias;
         padding-bottom: 10px;
         margin-bottom: 20px;
         font-size: 1.7rem;
+    }
+
+    .noticias-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    .noticias-grid :global(.tarjeta) {
+        margin-bottom: 0;
+    }
+
+    @media (max-width: 900px) {
+        .noticias-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 640px) {
+        .noticias-grid {
+            grid-template-columns: 1fr;
+        }
     }
 
     .vacio {
