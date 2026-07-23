@@ -59,14 +59,18 @@ const miniaturaPrograma = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.
     .sidebar {
         display: flex;
         flex-direction: column;
-        gap: 24px;
+        border-left: 1px solid var(--rojo-konce);
+        padding-left: 24px;
     }
 
     .bloque {
-        background: white;
-        border: 1px solid var(--borde-suave);
-        border-radius: 4px;
-        padding: 20px;
+        padding: 24px 0;
+        border-top: 1px solid var(--rojo-konce);
+    }
+
+    .bloque:first-child {
+        padding-top: 0;
+        border-top: none;
     }
 
     .bloque-titulo {
