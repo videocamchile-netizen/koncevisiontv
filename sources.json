@@ -26,5 +26,12 @@
     "tipo": "rss",
     "url": "https://www.ciperchile.cl/feed/",
     "activo": false
+  },
+  {
+    "id": "diarioconcepcion",
+    "nombre": "Diario Concepción",
+    "tipo": "rss",
+    "url": "https://www.diarioconcepcion.cl/rss.xml",
+    "activo": true
   }
 ]
