@@ -178,7 +178,7 @@ async function redactarNoticia(datos) {
     return redactarConGroq(datos);
 }
 
-async function procesarFuente(fuente) {
+async function procesarFuente(fuente, loteTimestamp) {
     console.log(`Revisando fuente: ${fuente.nombre}`);
     const items = await obtenerItemsDeFuente(fuente);
     let creadas = 0;
@@ -220,6 +220,7 @@ async function procesarFuente(fuente) {
                 fuenteNombre: fuente.nombre,
                 fuenteUrl: enlaceOriginal,
                 fecha: item.pubDate ? new Date(item.pubDate).toISOString() : new Date().toISOString(),
+                agregada: loteTimestamp,
             };
 
             const archivo = matter.stringify(redactado.cuerpo, frontmatter);
@@ -240,10 +241,11 @@ async function main() {
         (f) => f.activo && f.tipo === 'rss',
     );
 
+    const loteTimestamp = new Date().toISOString();
     let total = 0;
     for (const fuente of fuentes) {
         try {
-            total += await procesarFuente(fuente);
+            total += await procesarFuente(fuente, loteTimestamp);
         } catch (error) {
             if (error instanceof CuotaGeminiExcedidaError) {
                 console.log(`Cuota diaria de Gemini agotada, se corta la corrida (${total} noticia(s) creada(s) antes de cortar).`);

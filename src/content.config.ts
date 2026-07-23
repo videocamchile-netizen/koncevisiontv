@@ -12,6 +12,7 @@ const noticias = defineCollection({
     fuenteNombre: z.string(),
     fuenteUrl: z.string().url(),
     fecha: z.coerce.date(),
+    agregada: z.coerce.date().optional(),
   }),
 });
 

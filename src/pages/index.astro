@@ -6,10 +6,20 @@ import Sidebar from '../components/Sidebar.astro';
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 
-const noticias = (await getCollection('noticias')).sort(
-    (a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf(),
-);
-const [destacada, ...resto] = noticias;
+const todasLasNoticias = await getCollection('noticias');
+const noticias = todasLasNoticias.sort((a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf());
+
+const UN_DIA_MS = 24 * 60 * 60 * 1000;
+const loteDe = (noticia) => (noticia.data.agregada ?? noticia.data.fecha).valueOf();
+const ultimoLote = Math.max(...todasLasNoticias.map(loteDe));
+
+const [candidataDelLote] = todasLasNoticias
+    .filter((noticia) => loteDe(noticia) === ultimoLote)
+    .sort((a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf());
+
+const esDeHoy = candidataDelLote && Date.now() - candidataDelLote.data.fecha.valueOf() <= UN_DIA_MS;
+const destacada = esDeHoy ? candidataDelLote : noticias[0];
+const resto = noticias.filter((noticia) => noticia.id !== destacada?.id);
 const paraGrid = resto.slice(0, 9);
 ---
 
