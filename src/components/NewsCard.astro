@@ -1,6 +1,4 @@
 ---
-import { Image } from 'astro:assets';
-
 interface Props {
     titulo: string;
     resumen: string;
@@ -16,7 +14,7 @@ const fechaFormateada = fecha.toLocaleDateString('es-CL', { day: 'numeric', mont
 <article class="tarjeta">
     <a href={enlace} class="tarjeta-imagen-link">
         {imagenUrl ? (
-            <Image src={imagenUrl} alt={titulo} width={600} height={400} format="webp" loading="lazy" class="tarjeta-imagen" />
+            <img src={imagenUrl} alt={titulo} width={600} height={400} loading="lazy" class="tarjeta-imagen" />
         ) : (
             <img src="/placeholder.svg" alt={titulo} loading="lazy" class="tarjeta-imagen" />
         )}
