@@ -88,7 +88,20 @@ const miniaturaPrograma = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.
         padding: 0;
         display: flex;
         flex-direction: column;
-        gap: 12px;
+    }
+
+    .lista-leidas li {
+        padding: 12px 0;
+        border-bottom: 1px dashed var(--borde-suave);
+    }
+
+    .lista-leidas li:first-child {
+        padding-top: 0;
+    }
+
+    .lista-leidas li:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
     }
 
     .lista-leidas a {
