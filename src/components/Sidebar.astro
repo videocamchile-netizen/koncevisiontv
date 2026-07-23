@@ -3,6 +3,12 @@ import { slugCategoria } from '../data/categorias.mjs';
 import programa from '../data/ultimo-programa.json';
 import { getCollection } from 'astro:content';
 
+interface Props {
+    anuncioLateral?: boolean;
+}
+
+const { anuncioLateral = false } = Astro.props;
+
 const CATEGORIAS_DESTACADAS = ['Nacional', 'Internacional', 'Economía'];
 
 const masLeidas = (await getCollection('noticias'))
@@ -54,12 +60,13 @@ const miniaturaPrograma = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.
         ▶ Síguenos en YouTube
     </a>
 
-    <div class="anuncio-lateral">
-        <span class="anuncio-lateral-etiqueta">Publicidad</span>
-        <a href="https://www.funerariasrenacer.cl/" target="_blank" rel="noopener noreferrer">
-            <img src="/anuncios/renacer.jpeg" alt="Funeraria Renacer — Servicios funerarios, Colón 1361, Talcahuano" />
-        </a>
-    </div>
+    {anuncioLateral && (
+        <div class="anuncio-lateral">
+            <a href="https://www.funerariasrenacer.cl/" target="_blank" rel="noopener noreferrer">
+                <img src="/anuncios/renacer.jpg" alt="Funeraria Renacer — Servicios funerarios, Colón 1361, Talcahuano" />
+            </a>
+        </div>
+    )}
 </aside>
 
 <style>
@@ -208,22 +215,7 @@ const miniaturaPrograma = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.
     }
 
     .anuncio-lateral {
-        position: relative;
         margin-top: 24px;
-    }
-
-    .anuncio-lateral-etiqueta {
-        position: absolute;
-        top: 6px;
-        left: 8px;
-        font-family: var(--fuente-mono);
-        font-size: 0.6rem;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        color: var(--blanco-senal);
-        background: rgba(0, 0, 0, 0.5);
-        padding: 2px 6px;
-        border-radius: 2px;
     }
 
     .anuncio-lateral img {
