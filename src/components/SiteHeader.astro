@@ -28,11 +28,36 @@
             <a href="/categoria/nacional">Nacional</a>
             <a href="/categoria/internacional">Internacional</a>
             <a href="/categoria/economia">Economía</a>
-            <a href="/ultimo-programa">En Vivo / Último Programa</a>
+            <a href="/ultimo-programa" class="link-en-vivo" id="linkEnVivoNav">
+                <span class="punto-en-vivo" id="puntoEnVivoNav"></span>
+                En Vivo
+            </a>
             <a href="/publicidad">Publicidad</a>
         </div>
     </nav>
 </header>
+
+<script>
+    (function () {
+        const CHANNEL_ID = 'UCvdeRKMWaVgk7sQM_0zRqrQ';
+        const link = document.getElementById('linkEnVivoNav');
+        if (!link) return;
+
+        function marcarEnVivo(activo) {
+            link.classList.toggle('on', activo);
+        }
+
+        function verificarEnVivo() {
+            const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/channel/${CHANNEL_ID}/live&format=json`;
+            fetch(url)
+                .then((r) => marcarEnVivo(r.ok))
+                .catch(() => marcarEnVivo(false));
+        }
+
+        verificarEnVivo();
+        setInterval(verificarEnVivo, 3 * 60 * 1000);
+    })();
+</script>
 
 <style>
     .site-header {
@@ -148,5 +173,29 @@
         .punto-directo {
             animation: none;
         }
+    }
+
+    .link-en-vivo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .punto-en-vivo {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.25);
+        transition: background-color 0.3s ease;
+    }
+
+    .link-en-vivo.on {
+        color: var(--rojo-konce) !important;
+        font-weight: 700;
+    }
+
+    .link-en-vivo.on .punto-en-vivo {
+        background: var(--rojo-konce);
+        animation: parpadeo-nav 1.4s ease-in-out infinite;
     }
 </style>
