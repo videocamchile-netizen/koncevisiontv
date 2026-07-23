@@ -10,15 +10,28 @@ const todasLasNoticias = await getCollection('noticias');
 const noticias = todasLasNoticias.sort((a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf());
 
 const UN_DIA_MS = 24 * 60 * 60 * 1000;
-const loteDe = (noticia) => (noticia.data.agregada ?? noticia.data.fecha).valueOf();
-const ultimoLote = Math.max(...todasLasNoticias.map(loteDe));
+const CATEGORIAS_EXCLUIDAS_DESTACADA = ['Entretención'];
 
-const [candidataDelLote] = todasLasNoticias
-    .filter((noticia) => loteDe(noticia) === ultimoLote)
-    .sort((a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf());
+const loteDe = (noticia) => (noticia.data.agregada ?? noticia.data.fecha).valueOf();
+const esElegible = (noticia) => !CATEGORIAS_EXCLUIDAS_DESTACADA.includes(noticia.data.categoria);
+
+// Entre varias candidatas, la política siempre gana; si no hay, se usa la más reciente por fecha.
+function elegirDestacada(candidatas) {
+    if (candidatas.length === 0) return undefined;
+    const politicas = candidatas.filter((noticia) => noticia.data.categoria === 'Política');
+    const pool = politicas.length > 0 ? politicas : candidatas;
+    return pool.sort((a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf())[0];
+}
+
+const noticiasElegibles = todasLasNoticias.filter(esElegible);
+const ultimoLote = noticiasElegibles.length > 0 ? Math.max(...noticiasElegibles.map(loteDe)) : null;
+const candidataDelLote =
+    ultimoLote === null
+        ? undefined
+        : elegirDestacada(noticiasElegibles.filter((noticia) => loteDe(noticia) === ultimoLote));
 
 const esDeHoy = candidataDelLote && Date.now() - candidataDelLote.data.fecha.valueOf() <= UN_DIA_MS;
-const destacada = esDeHoy ? candidataDelLote : noticias[0];
+const destacada = esDeHoy ? candidataDelLote : (elegirDestacada(noticiasElegibles) ?? noticias[0]);
 const resto = noticias.filter((noticia) => noticia.id !== destacada?.id);
 const paraGrid = resto.slice(0, 9);
 ---
