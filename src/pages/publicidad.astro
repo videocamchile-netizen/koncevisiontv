@@ -15,11 +15,13 @@ import Layout from '../layouts/Layout.astro';
 
         <section class="contacto">
             <h2>Contacto Comercial</h2>
-            <form class="form-contacto">
-                <input type="text" placeholder="Nombre de tu Empresa" required />
-                <input type="tel" placeholder="Teléfono" required />
-                <input type="email" placeholder="Correo electrónico" required />
-                <select required>
+            <form class="form-contacto" id="form-publicidad">
+                <input type="hidden" name="access_key" value="6c541092-0582-4682-8784-52fbe725cf24" />
+                <input type="hidden" name="subject" value="Nueva solicitud de Publicidad — Koncevision TV" />
+                <input type="text" name="empresa" placeholder="Nombre de tu Empresa" required />
+                <input type="tel" name="telefono" placeholder="Teléfono" required />
+                <input type="email" name="email" placeholder="Correo electrónico" required />
+                <select name="tipo_publicidad" required>
                     <option value="" selected disabled>¿Qué tipo de publicidad te interesa?</option>
                     <option value="mencion-youtube">Mención en YouTube</option>
                     <option value="banner-youtube">Banner en YouTube</option>
@@ -29,12 +31,48 @@ import Layout from '../layouts/Layout.astro';
                     <option value="paquete-combinado">Paquete combinado (varios formatos)</option>
                     <option value="otro">Otro / no estoy seguro</option>
                 </select>
-                <textarea placeholder="Cuéntanos más detalles (opcional)" rows="4"></textarea>
+                <textarea name="mensaje" placeholder="Cuéntanos más detalles (opcional)" rows="4"></textarea>
                 <button type="submit">Enviar Solicitud</button>
+                <p class="form-estado" id="form-estado" role="status"></p>
             </form>
         </section>
     </main>
 </Layout>
+
+<script>
+    const formulario = document.getElementById('form-publicidad') as HTMLFormElement;
+    const estado = document.getElementById('form-estado') as HTMLParagraphElement;
+
+    formulario.addEventListener('submit', async (evento) => {
+        evento.preventDefault();
+        const boton = formulario.querySelector('button') as HTMLButtonElement;
+        boton.disabled = true;
+        estado.textContent = 'Enviando...';
+        estado.className = 'form-estado';
+
+        try {
+            const respuesta = await fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                body: JSON.stringify(Object.fromEntries(new FormData(formulario))),
+            });
+            const resultado = await respuesta.json();
+
+            if (resultado.success) {
+                estado.textContent = '¡Gracias! Recibimos tu solicitud, te contactaremos pronto.';
+                estado.className = 'form-estado form-estado-ok';
+                formulario.reset();
+            } else {
+                throw new Error(resultado.message);
+            }
+        } catch {
+            estado.textContent = 'No pudimos enviar tu solicitud. Intenta de nuevo o escríbenos directo.';
+            estado.className = 'form-estado form-estado-error';
+        } finally {
+            boton.disabled = false;
+        }
+    });
+</script>
 
 <style>
     .pagina-publicidad {
@@ -131,5 +169,24 @@ import Layout from '../layouts/Layout.astro';
 
     .form-contacto button:hover {
         background: var(--rojo-konce-oscuro);
+    }
+
+    .form-contacto button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .form-estado {
+        margin: 0;
+        font-size: 0.95rem;
+        min-height: 1.2em;
+    }
+
+    .form-estado-ok {
+        color: #86efac;
+    }
+
+    .form-estado-error {
+        color: #fca5a5;
     }
 </style>
