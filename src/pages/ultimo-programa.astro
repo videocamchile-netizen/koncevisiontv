@@ -2,15 +2,16 @@
 import Layout from '../layouts/Layout.astro';
 import programa from '../data/ultimo-programa.json';
 
+const CHANNEL_ID = 'UCvdeRKMWaVgk7sQM_0zRqrQ';
 const miniatura = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.jpg`;
 ---
 
-<Layout title="Último Programa" description={programa.titulo} image={miniatura}>
+<Layout title="En Vivo / Último Programa" description={programa.titulo} image={miniatura}>
     <main class="contenedor pagina-programa">
-        <h1 class="programa-titulo">Último Programa</h1>
-        <p class="programa-subtitulo">{programa.titulo}</p>
+        <h1 class="programa-titulo" id="programaTitulo">En Vivo / Último Programa</h1>
+        <p class="programa-subtitulo" id="programaSubtitulo">{programa.titulo}</p>
 
-        <div class="reproductor" data-video-id={programa.videoId}>
+        <div class="reproductor" data-video-id={programa.videoId} data-channel-id={CHANNEL_ID} id="reproductor">
             <img src={miniatura} alt={programa.titulo} class="miniatura" loading="lazy" />
             <button type="button" class="boton-play" aria-label="Reproducir video">
                 <span class="triangulo"></span>
@@ -22,6 +23,7 @@ const miniatura = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.jpg`;
             target="_blank"
             rel="noopener noreferrer"
             class="ver-en-youtube"
+            id="verEnYoutube"
         >
             Ver en YouTube ↗
         </a>
@@ -29,20 +31,66 @@ const miniatura = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.jpg`;
 </Layout>
 
 <script>
-    document.querySelectorAll('.reproductor').forEach((contenedor) => {
-        contenedor.querySelector('.boton-play')?.addEventListener('click', () => {
-            const videoId = contenedor.dataset.videoId;
-            const iframe = document.createElement('iframe');
-            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-            iframe.title = 'Reproductor de YouTube';
-            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-            iframe.allowFullscreen = true;
-            iframe.style.width = '100%';
-            iframe.style.height = '100%';
-            iframe.style.border = '0';
-            contenedor.replaceChildren(iframe);
-        });
+    const contenedor = document.getElementById('reproductor');
+    const tituloEl = document.getElementById('programaTitulo');
+    const subtituloEl = document.getElementById('programaSubtitulo');
+    const linkEl = document.getElementById('verEnYoutube');
+
+    function crearIframe(videoId) {
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        iframe.title = 'Reproductor de YouTube';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = '0';
+        return iframe;
+    }
+
+    // Reproducción manual del último programa grabado (comportamiento normal)
+    contenedor?.querySelector('.boton-play')?.addEventListener('click', () => {
+        const videoId = contenedor.dataset.videoId;
+        if (videoId) contenedor.replaceChildren(crearIframe(videoId));
     });
+
+    // ========================================================
+    // DETECCIÓN AUTOMÁTICA DE TRANSMISIÓN EN VIVO (mismo patrón que elcomisario.cl)
+    // Truco: el oEmbed público de YouTube apuntando al /live del canal
+    // devuelve 200 + el video real cuando está transmitiendo, y 404 cuando no.
+    // Sin API key, sin cron, sin límite de cuota.
+    // ========================================================
+    (function () {
+        const channelId = contenedor?.dataset.channelId;
+        if (!channelId) return;
+
+        let enVivoMostrado = false;
+
+        function mostrarEnVivo(videoId, tituloTexto) {
+            if (enVivoMostrado || !contenedor) return;
+            enVivoMostrado = true;
+            contenedor.replaceChildren(crearIframe(videoId));
+            if (tituloEl) tituloEl.textContent = '🔴 En Vivo';
+            if (subtituloEl) subtituloEl.textContent = tituloTexto;
+            if (linkEl) linkEl.href = `https://www.youtube.com/watch?v=${videoId}`;
+        }
+
+        function verificarEnVivo() {
+            if (enVivoMostrado) return;
+            const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/channel/${channelId}/live&format=json`;
+            fetch(url)
+                .then((r) => (r.ok ? r.json() : null))
+                .then((data) => {
+                    if (!data || !data.title || !data.url) return;
+                    const match = data.url.match(/watch\?v=([^&]+)/);
+                    if (match && match[1]) mostrarEnVivo(match[1], data.title);
+                })
+                .catch(() => {});
+        }
+
+        verificarEnVivo();
+        setInterval(verificarEnVivo, 3 * 60 * 1000);
+    })();
 </script>
 
 <style>
