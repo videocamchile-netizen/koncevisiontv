@@ -1,0 +1,2 @@
+/superadmin https://koncevision-denuncia.videocamchile.workers.dev/admin 200
+/superadmin/* https://koncevision-denuncia.videocamchile.workers.dev/admin/:splat 200
