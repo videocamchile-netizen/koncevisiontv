@@ -59,6 +59,19 @@ function normalizarItems(canal) {
     return Array.isArray(items) ? items : [items];
 }
 
+function normalizarUrlsSitemap(urlset, filtroRuta) {
+    const urls = urlset?.url;
+    const lista = Array.isArray(urls) ? urls : urls ? [urls] : [];
+    return lista
+        .filter((u) => !filtroRuta || String(u.loc).includes(filtroRuta))
+        .map((u) => ({
+            title: u['news:news']?.['news:title'] ?? u.loc,
+            link: u.loc,
+            guid: u.loc,
+            pubDate: u['news:news']?.['news:publication_date'],
+        }));
+}
+
 async function obtenerItemsDeFuente(fuente) {
     const respuesta = await fetch(fuente.url, {
         headers: { 'User-Agent': 'Mozilla/5.0 (compatible; KoncevisionBot/1.0; +https://koncevisiontv.vercel.app)' },
@@ -69,6 +82,9 @@ async function obtenerItemsDeFuente(fuente) {
     }
     const xml = await respuesta.text();
     const parsed = xmlParser.parse(xml);
+    if (fuente.tipo === 'sitemap-news') {
+        return normalizarUrlsSitemap(parsed?.urlset, fuente.filtroRuta);
+    }
     return normalizarItems(parsed?.rss?.channel);
 }
 
@@ -99,6 +115,26 @@ async function extraerImagenDePagina(url) {
             }
         }
         return undefined;
+    } catch {
+        return undefined;
+    }
+}
+
+async function extraerCuerpoDePagina(url) {
+    try {
+        const respuesta = await fetch(url, {
+            headers: { 'User-Agent': 'Mozilla/5.0 (compatible; KoncevisionBot/1.0; +https://koncevisiontv.vercel.app)' },
+            signal: AbortSignal.timeout(10000),
+        });
+        if (!respuesta.ok) return undefined;
+        const html = await respuesta.text();
+        const inicio = html.indexOf('id="post_content"');
+        if (inicio === -1) return undefined;
+        const finRelacionadas = html.indexOf('id="container-related-post-manual"', inicio);
+        const bloque = html.slice(inicio, finRelacionadas === -1 ? inicio + 20000 : finRelacionadas);
+        const parrafos = [...bloque.matchAll(/<p[^>]*>(.*?)<\/p>/gs)].map((m) => limpiarHtml(m[1]));
+        const texto = parrafos.filter(Boolean).join('\n\n');
+        return texto || undefined;
     } catch {
         return undefined;
     }
@@ -181,10 +217,11 @@ async function redactarNoticia(datos) {
 async function procesarFuente(fuente, loteTimestamp) {
     console.log(`Revisando fuente: ${fuente.nombre}`);
     const items = await obtenerItemsDeFuente(fuente);
+    const tope = fuente.maxPorCorrida ?? MAX_NUEVAS_POR_FUENTE;
     let creadas = 0;
 
     for (const item of items) {
-        if (creadas >= MAX_NUEVAS_POR_FUENTE) break;
+        if (creadas >= tope) break;
         try {
             const enlaceOriginal = item.link;
             const guidRaw = typeof item.guid === 'object' ? item.guid?.['#text'] : item.guid;
@@ -197,7 +234,10 @@ async function procesarFuente(fuente, loteTimestamp) {
             if (existsSync(rutaArchivo)) continue;
 
             const cuerpoOriginalHtml = item['content:encoded'] ?? item.description ?? '';
-            const cuerpoOriginal = limpiarHtml(String(cuerpoOriginalHtml));
+            let cuerpoOriginal = limpiarHtml(String(cuerpoOriginalHtml));
+            if (!cuerpoOriginal && fuente.tipo === 'sitemap-news') {
+                cuerpoOriginal = (await extraerCuerpoDePagina(enlaceOriginal)) ?? '';
+            }
             if (!cuerpoOriginal) continue;
 
             let { url: imagenUrl, credito: imagenCredito } = extraerImagen(item);
@@ -238,7 +278,7 @@ async function procesarFuente(fuente, loteTimestamp) {
 async function main() {
     if (!existsSync(NOTICIAS_DIR)) mkdirSync(NOTICIAS_DIR, { recursive: true });
     const fuentes = JSON.parse(readFileSync(SOURCES_PATH, 'utf8')).filter(
-        (f) => f.activo && f.tipo === 'rss',
+        (f) => f.activo && ['rss', 'sitemap-news'].includes(f.tipo),
     );
 
     const loteTimestamp = new Date().toISOString();

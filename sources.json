@@ -33,5 +33,14 @@
     "tipo": "rss",
     "url": "https://www.diarioconcepcion.cl/rss.xml",
     "activo": true
+  },
+  {
+    "id": "epochtimes",
+    "nombre": "The Epoch Times en Español",
+    "tipo": "sitemap-news",
+    "url": "https://www.elepoch.com/sitemap-news.xml",
+    "filtroRuta": "/internacionales/",
+    "maxPorCorrida": 2,
+    "activo": true
   }
 ]
