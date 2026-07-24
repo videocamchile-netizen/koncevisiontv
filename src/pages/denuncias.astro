@@ -1,53 +1,83 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import ViewfinderFrame from '../components/ViewfinderFrame.astro';
 ---
 
 <Layout title="Denuncias | Koncevision TV">
     <main class="contenedor pagina-denuncias">
-        <h1 class="titulo-denuncias">Denuncias Ciudadanas</h1>
+        <p class="eyebrow eyebrow-canal">Canal de Denuncias · Confidencial</p>
+        <h1 class="titulo-denuncias">Denuncias Ciudadanas Responsables</h1>
+        <p class="lema-denuncias">Koncevision, tu imagen tu voz</p>
         <p class="intro-denuncias">
-            ¿Viste algo que la comunidad debería saber? Cuéntanos tu denuncia. Tus datos de contacto son
-            solo para verificar la información contigo, nunca se publican.
+            ¿Viste algo que la comunidad debería saber? Cuéntanoslo con el mayor detalle posible.
+            Tus datos de contacto son solo para verificar la información contigo — nunca se publican.
         </p>
 
-        <section class="contacto">
-            <form class="form-contacto" id="form-denuncia">
-                <input type="text" name="sitio_web" class="campo-trampa" tabindex="-1" autocomplete="off" />
-                <input type="text" name="nombre" placeholder="Nombre" required />
-                <input type="text" name="apellido" placeholder="Apellido" required />
-                <input type="email" name="correo" placeholder="Correo electrónico" required />
-                <input type="tel" name="celular" placeholder="Celular" required />
-                <textarea name="denuncia" placeholder="Cuéntanos tu denuncia" rows="6" required></textarea>
+        <form class="form-denuncia" id="form-denuncia">
+            <input type="text" name="sitio_web" class="campo-trampa" tabindex="-1" autocomplete="off" />
 
-                <div class="campo-adjunto">
-                    <label for="foto-denuncia">Foto (opcional, hasta 95MB en total con el video)</label>
-                    <input type="file" name="foto" id="foto-denuncia" accept="image/*" />
-                </div>
-                <div class="campo-adjunto">
-                    <label for="video-denuncia">Video (opcional, hasta 95MB en total con la foto)</label>
-                    <input type="file" name="video" id="video-denuncia" accept="video/*" />
+            <section class="bloque-relato">
+                <p class="eyebrow-seccion">01 · Tu relato</p>
+
+                <div class="fila-contacto">
+                    <input type="text" name="nombre" placeholder="Nombre" required />
+                    <input type="text" name="apellido" placeholder="Apellido" required />
+                    <input type="email" name="correo" placeholder="Correo electrónico" required />
+                    <input type="tel" name="celular" placeholder="Celular" required />
                 </div>
 
-                <button type="submit">Enviar Denuncia</button>
-                <p class="form-estado" id="form-estado" role="status"></p>
-            </form>
-
-            <aside class="caja-dropbox">
-                <h2>¿Tu video pesa más de 95MB?</h2>
-                <p>
-                    Es lo más probable con videos de celular. Súbelo directo a esta carpeta, sin necesidad
-                    de crear ninguna cuenta, y de todas formas cuéntanos tu denuncia en el formulario.
+                <ViewfinderFrame>
+                    <div class="papel-relato">
+                        <textarea
+                            name="denuncia"
+                            id="campo-denuncia"
+                            placeholder="¿Qué viste? ¿Cuándo y dónde ocurrió? Cuéntanos con el mayor detalle posible: nombres, fechas, lugares."
+                            rows="12"
+                            required
+                        ></textarea>
+                    </div>
+                </ViewfinderFrame>
+                <p class="ayuda-relato">
+                    <span id="contador-caracteres">0</span> caracteres — mientras más contexto entregues,
+                    más fácil será verificar tu denuncia.
                 </p>
-                <a
-                    href="https://www.dropbox.com/request/uojmtfkfq720orvhr5d4"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="boton-dropbox"
-                >
-                    Subir archivo pesado
-                </a>
-            </aside>
-        </section>
+            </section>
+
+            <div class="grid-pruebas">
+                <section class="bloque-pruebas">
+                    <p class="eyebrow-seccion">02 · Pruebas (opcional)</p>
+                    <div class="grid-adjuntos">
+                        <div class="campo-adjunto">
+                            <label for="foto-denuncia">Foto (hasta 95MB en total con el video)</label>
+                            <input type="file" name="foto" id="foto-denuncia" accept="image/*" />
+                        </div>
+                        <div class="campo-adjunto">
+                            <label for="video-denuncia">Video (hasta 95MB en total con la foto)</label>
+                            <input type="file" name="video" id="video-denuncia" accept="video/*" />
+                        </div>
+                    </div>
+                </section>
+
+                <aside class="caja-dropbox">
+                    <h2>¿Tu video pesa más de 95MB?</h2>
+                    <p>
+                        Súbelo directo a esta carpeta, sin necesidad de crear ninguna cuenta. Cuéntanos
+                        tu denuncia en el formulario.
+                    </p>
+                    <a
+                        href="https://www.dropbox.com/request/uojmtfkfq720orvhr5d4"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="boton-dropbox"
+                    >
+                        Subir archivo pesado
+                    </a>
+                </aside>
+            </div>
+
+            <button type="submit">Enviar Denuncia <span class="flecha">→</span></button>
+            <p class="form-estado" id="form-estado" role="status"></p>
+        </form>
     </main>
 </Layout>
 
@@ -58,6 +88,12 @@ import Layout from '../layouts/Layout.astro';
     const estado = document.getElementById('form-estado') as HTMLParagraphElement;
     const campoFoto = document.getElementById('foto-denuncia') as HTMLInputElement;
     const campoVideo = document.getElementById('video-denuncia') as HTMLInputElement;
+    const campoDenuncia = document.getElementById('campo-denuncia') as HTMLTextAreaElement;
+    const contador = document.getElementById('contador-caracteres') as HTMLSpanElement;
+
+    campoDenuncia.addEventListener('input', () => {
+        contador.textContent = String(campoDenuncia.value.length);
+    });
 
     formulario.addEventListener('submit', async (evento) => {
         evento.preventDefault();
@@ -85,6 +121,7 @@ import Layout from '../layouts/Layout.astro';
                 estado.textContent = '¡Gracias! Recibimos tu denuncia, la revisaremos a la brevedad.';
                 estado.className = 'form-estado form-estado-ok';
                 formulario.reset();
+                contador.textContent = '0';
             } else {
                 throw new Error(resultado.error ?? 'Error desconocido');
             }
@@ -99,42 +136,46 @@ import Layout from '../layouts/Layout.astro';
 
 <style>
     .pagina-denuncias {
-        padding: 40px 20px;
+        padding: 56px 20px 80px;
+        max-width: 900px;
+    }
+
+    .eyebrow-canal {
+        color: var(--rojo-konce);
+        margin: 0 0 14px;
     }
 
     .titulo-denuncias {
-        font-size: 2rem;
+        font-family: 'Playfair Display', serif;
+        font-weight: 800;
+        text-transform: none;
+        letter-spacing: 0;
+        font-size: clamp(2.2rem, 4vw, 3rem);
         margin-bottom: 10px;
     }
 
-    .intro-denuncias {
-        color: #4b5563;
+    .lema-denuncias {
+        font-family: 'Lora', serif;
+        font-style: italic;
+        color: var(--rojo-konce);
         font-size: 1.1rem;
+        margin: 0 0 20px;
+    }
+
+    .intro-denuncias {
+        font-family: 'Lora', serif;
+        color: #3c4657;
+        font-size: 1.15rem;
+        line-height: 1.6;
         margin: 0;
         max-width: 640px;
     }
 
-    .contacto {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 24px;
+    .form-denuncia {
         margin-top: 40px;
-        align-items: start;
-    }
-
-    @media (max-width: 800px) {
-        .contacto {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .form-contacto {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
         background: var(--azul-estudio);
         color: var(--blanco-senal);
-        padding: 30px;
+        padding: 36px;
         border-radius: 4px;
     }
 
@@ -146,14 +187,132 @@ import Layout from '../layouts/Layout.astro';
         opacity: 0;
     }
 
-    .form-contacto input,
-    .form-contacto textarea {
+    .eyebrow-seccion {
+        display: flex;
+        align-items: center;
+        font-family: var(--fuente-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        font-size: 0.75rem;
+        color: var(--gris-metalico);
+        margin: 0 0 20px;
+    }
+
+    .eyebrow-seccion::before {
+        content: '';
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background: var(--rojo-konce);
+        margin-right: 10px;
+        flex-shrink: 0;
+    }
+
+    .fila-contacto {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    @media (max-width: 560px) {
+        .fila-contacto {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .fila-contacto input {
         padding: 12px;
         border: 1px solid var(--azul-medianoche);
         border-radius: 4px;
         font-family: var(--fuente-cuerpo);
         background: white;
         color: var(--carbon);
+    }
+
+    .papel-relato {
+        background: #ffffff;
+        border-radius: 4px;
+        padding: 26px;
+        transition: box-shadow 200ms ease;
+    }
+
+    .papel-relato textarea {
+        width: 100%;
+        min-height: 300px;
+        border: none;
+        outline: none;
+        resize: vertical;
+        background: transparent;
+        color: var(--carbon);
+        font-family: 'Lora', serif;
+        font-size: 1.05rem;
+        line-height: 1.7;
+    }
+
+    .papel-relato textarea::placeholder {
+        color: #8b93a3;
+    }
+
+    :global(.visor:focus-within) .papel-relato {
+        box-shadow: 0 0 0 2px rgba(213, 18, 31, 0.3);
+    }
+
+    :global(.visor:focus-within) .esquina {
+        filter: drop-shadow(0 0 4px rgba(213, 18, 31, 0.65));
+    }
+
+    /* Corrige un choque de shorthand en el componente compartido ViewfinderFrame:
+       "border-top: 4px solid" sin color reinicia ese lado a currentColor en vez
+       de mantener el rojo de "border-color". Se corrige acotado a esta página. */
+    .bloque-relato :global(.esquina.sup-izq) {
+        border-top-color: var(--rojo-konce);
+        border-left-color: var(--rojo-konce);
+    }
+
+    .bloque-relato :global(.esquina.sup-der) {
+        border-top-color: var(--rojo-konce);
+        border-right-color: var(--rojo-konce);
+    }
+
+    .bloque-relato :global(.esquina.inf-izq) {
+        border-bottom-color: var(--rojo-konce);
+        border-left-color: var(--rojo-konce);
+    }
+
+    .bloque-relato :global(.esquina.inf-der) {
+        border-bottom-color: var(--rojo-konce);
+        border-right-color: var(--rojo-konce);
+    }
+
+    .ayuda-relato {
+        font-family: var(--fuente-mono);
+        font-size: 0.78rem;
+        letter-spacing: 0.01em;
+        color: var(--gris-metalico);
+        margin: 12px 0 0;
+    }
+
+    .grid-pruebas {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 24px;
+        margin-top: 36px;
+        padding-top: 32px;
+        border-top: 1px solid var(--azul-medianoche);
+        align-items: start;
+    }
+
+    @media (max-width: 800px) {
+        .grid-pruebas {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .grid-adjuntos {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 16px;
     }
 
     .campo-adjunto {
@@ -163,41 +322,80 @@ import Layout from '../layouts/Layout.astro';
     }
 
     .campo-adjunto label {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
+        color: #c7cdd8;
     }
 
     .campo-adjunto input {
         background: white;
+        border: 1px solid var(--azul-medianoche);
         border-radius: 4px;
         padding: 8px;
+        font-family: var(--fuente-cuerpo);
+        font-size: 0.85rem;
+        color: var(--carbon);
     }
 
-    .form-contacto button {
+    .campo-adjunto input::file-selector-button {
+        background: var(--carbon);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 8px 14px;
+        margin-right: 12px;
+        font-family: var(--fuente-display);
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        font-size: 0.8rem;
+        cursor: pointer;
+    }
+
+    .campo-adjunto input::file-selector-button:hover {
+        background: var(--rojo-konce);
+    }
+
+    .form-denuncia > button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
         background: var(--rojo-konce);
         color: white;
-        padding: 12px;
+        padding: 16px;
         border: none;
         border-radius: 4px;
         cursor: pointer;
         font-family: var(--fuente-display);
         text-transform: uppercase;
-        letter-spacing: 0.03em;
-        font-size: 1rem;
+        letter-spacing: 0.04em;
+        font-size: 1.05rem;
+        margin-top: 32px;
     }
 
-    .form-contacto button:hover {
+    .form-denuncia > button:hover {
         background: var(--rojo-konce-oscuro);
     }
 
-    .form-contacto button:disabled {
+    .form-denuncia > button:hover .flecha {
+        transform: translateX(3px);
+    }
+
+    .form-denuncia > button:disabled {
         opacity: 0.6;
         cursor: not-allowed;
     }
 
+    .flecha {
+        display: inline-block;
+        transition: transform 150ms ease;
+    }
+
     .form-estado {
-        margin: 0;
+        margin: 12px 0 0;
         font-size: 0.95rem;
         min-height: 1.2em;
+        text-align: center;
     }
 
     .form-estado-ok {
@@ -242,5 +440,12 @@ import Layout from '../layouts/Layout.astro';
 
     .boton-dropbox:hover {
         background: var(--rojo-konce-oscuro);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .papel-relato,
+        .flecha {
+            transition: none;
+        }
     }
 </style>
