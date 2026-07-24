@@ -31,6 +31,22 @@ import Layout from '../layouts/Layout.astro';
                 <button type="submit">Enviar Denuncia</button>
                 <p class="form-estado" id="form-estado" role="status"></p>
             </form>
+
+            <aside class="caja-dropbox">
+                <h2>¿Tu video pesa más de 95MB?</h2>
+                <p>
+                    Es lo más probable con videos de celular. Súbelo directo a esta carpeta, sin necesidad
+                    de crear ninguna cuenta, y de todas formas cuéntanos tu denuncia en el formulario.
+                </p>
+                <a
+                    href="https://www.dropbox.com/request/uojmtfkfq720orvhr5d4"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="boton-dropbox"
+                >
+                    Subir archivo pesado
+                </a>
+            </aside>
         </section>
     </main>
 </Layout>
@@ -100,10 +116,16 @@ import Layout from '../layouts/Layout.astro';
 
     .contacto {
         display: grid;
-        grid-template-columns: 1fr;
-        max-width: 640px;
+        grid-template-columns: 2fr 1fr;
         gap: 24px;
         margin-top: 40px;
+        align-items: start;
+    }
+
+    @media (max-width: 800px) {
+        .contacto {
+            grid-template-columns: 1fr;
+        }
     }
 
     .form-contacto {
@@ -184,5 +206,41 @@ import Layout from '../layouts/Layout.astro';
 
     .form-estado-error {
         color: #fca5a5;
+    }
+
+    .caja-dropbox {
+        background: var(--carbon);
+        color: var(--blanco-senal);
+        padding: 24px;
+        border-radius: 4px;
+        border: 1px solid var(--azul-medianoche);
+    }
+
+    .caja-dropbox h2 {
+        font-size: 1.1rem;
+        margin: 0 0 10px;
+    }
+
+    .caja-dropbox p {
+        font-size: 0.9rem;
+        color: #d1d5db;
+        margin: 0 0 16px;
+    }
+
+    .boton-dropbox {
+        display: inline-block;
+        background: var(--rojo-konce);
+        color: white;
+        text-decoration: none;
+        padding: 10px 16px;
+        border-radius: 4px;
+        font-family: var(--fuente-display);
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        font-size: 0.9rem;
+    }
+
+    .boton-dropbox:hover {
+        background: var(--rojo-konce-oscuro);
     }
 </style>
