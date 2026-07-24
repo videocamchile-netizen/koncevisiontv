@@ -50,10 +50,12 @@ import ViewfinderFrame from '../components/ViewfinderFrame.astro';
                         <div class="campo-adjunto">
                             <label for="foto-denuncia">Fotos (una o más, hasta 95MB en total con los videos)</label>
                             <input type="file" name="foto" id="foto-denuncia" accept="image/*" multiple />
+                            <p class="resumen-adjunto" id="resumen-foto">Ninguna foto seleccionada.</p>
                         </div>
                         <div class="campo-adjunto">
                             <label for="video-denuncia">Videos (uno o más, hasta 95MB en total con las fotos)</label>
                             <input type="file" name="video" id="video-denuncia" accept="video/*" multiple />
+                            <p class="resumen-adjunto" id="resumen-video">Ningún video seleccionado.</p>
                         </div>
                     </div>
                 </section>
@@ -88,11 +90,47 @@ import ViewfinderFrame from '../components/ViewfinderFrame.astro';
     const estado = document.getElementById('form-estado') as HTMLParagraphElement;
     const campoFoto = document.getElementById('foto-denuncia') as HTMLInputElement;
     const campoVideo = document.getElementById('video-denuncia') as HTMLInputElement;
+    const resumenFoto = document.getElementById('resumen-foto') as HTMLParagraphElement;
+    const resumenVideo = document.getElementById('resumen-video') as HTMLParagraphElement;
     const campoDenuncia = document.getElementById('campo-denuncia') as HTMLTextAreaElement;
     const contador = document.getElementById('contador-caracteres') as HTMLSpanElement;
 
     campoDenuncia.addEventListener('input', () => {
         contador.textContent = String(campoDenuncia.value.length);
+    });
+
+    // Un <input type="file" multiple> reemplaza la selección anterior cada vez
+    // que se vuelve a abrir el diálogo. Esto hace que, si el denunciante elige
+    // sus fotos de a una, se vayan acumulando en vez de perder las anteriores.
+    let fotosAcumuladas: File[] = [];
+    let videosAcumuladas: File[] = [];
+
+    function sincronizarInput(input: HTMLInputElement, acumulados: File[]) {
+        const transferencia = new DataTransfer();
+        acumulados.forEach((archivo) => transferencia.items.add(archivo));
+        input.files = transferencia.files;
+    }
+
+    function actualizarResumen(resumen: HTMLParagraphElement, acumulados: File[], singular: string, plural: string) {
+        if (acumulados.length === 0) {
+            resumen.textContent = `Ningún(a) ${singular} seleccionado(a).`;
+        } else if (acumulados.length === 1) {
+            resumen.textContent = `1 ${singular} seleccionado(a): ${acumulados[0].name}`;
+        } else {
+            resumen.textContent = `${acumulados.length} ${plural} seleccionados: ${acumulados.map((a) => a.name).join(', ')}`;
+        }
+    }
+
+    campoFoto.addEventListener('change', () => {
+        fotosAcumuladas = [...fotosAcumuladas, ...Array.from(campoFoto.files ?? [])];
+        sincronizarInput(campoFoto, fotosAcumuladas);
+        actualizarResumen(resumenFoto, fotosAcumuladas, 'foto', 'fotos');
+    });
+
+    campoVideo.addEventListener('change', () => {
+        videosAcumuladas = [...videosAcumuladas, ...Array.from(campoVideo.files ?? [])];
+        sincronizarInput(campoVideo, videosAcumuladas);
+        actualizarResumen(resumenVideo, videosAcumuladas, 'video', 'videos');
     });
 
     formulario.addEventListener('submit', async (evento) => {
@@ -124,6 +162,10 @@ import ViewfinderFrame from '../components/ViewfinderFrame.astro';
                 estado.className = 'form-estado form-estado-ok';
                 formulario.reset();
                 contador.textContent = '0';
+                fotosAcumuladas = [];
+                videosAcumuladas = [];
+                actualizarResumen(resumenFoto, fotosAcumuladas, 'foto', 'fotos');
+                actualizarResumen(resumenVideo, videosAcumuladas, 'video', 'videos');
             } else {
                 throw new Error(resultado.error ?? 'Error desconocido');
             }
@@ -326,6 +368,13 @@ import ViewfinderFrame from '../components/ViewfinderFrame.astro';
     .campo-adjunto label {
         font-size: 0.85rem;
         color: #c7cdd8;
+    }
+
+    .resumen-adjunto {
+        font-family: var(--fuente-mono);
+        font-size: 0.72rem;
+        color: var(--gris-metalico);
+        margin: 2px 0 0;
     }
 
     .campo-adjunto input {
