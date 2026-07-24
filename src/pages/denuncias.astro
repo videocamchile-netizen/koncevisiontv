@@ -13,6 +13,7 @@ import ViewfinderFrame from '../components/ViewfinderFrame.astro';
             Tus datos de contacto son solo para verificar la información contigo — nunca se publican.
         </p>
 
+        <div class="marco-formulario">
         <form class="form-denuncia" id="form-denuncia">
             <input type="text" name="sitio_web" class="campo-trampa" tabindex="-1" autocomplete="off" />
 
@@ -80,6 +81,7 @@ import ViewfinderFrame from '../components/ViewfinderFrame.astro';
             <button type="submit">Enviar Denuncia <span class="flecha">→</span></button>
             <p class="form-estado" id="form-estado" role="status"></p>
         </form>
+        </div>
     </main>
 </Layout>
 
@@ -215,8 +217,33 @@ import ViewfinderFrame from '../components/ViewfinderFrame.astro';
         max-width: 640px;
     }
 
-    .form-denuncia {
+    .marco-formulario {
         margin-top: 40px;
+        padding: 14px;
+        border-top: 1px solid var(--rojo-konce);
+        border-bottom: 1px solid var(--rojo-konce);
+        position: relative;
+    }
+
+    .marco-formulario::before,
+    .marco-formulario::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background: var(--rojo-konce);
+    }
+
+    .marco-formulario::before {
+        left: 0;
+    }
+
+    .marco-formulario::after {
+        right: 0;
+    }
+
+    .form-denuncia {
         background: var(--azul-estudio);
         color: var(--blanco-senal);
         padding: 36px;
