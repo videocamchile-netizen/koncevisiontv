@@ -1,0 +1,188 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Denuncias | Koncevision TV">
+    <main class="contenedor pagina-denuncias">
+        <h1 class="titulo-denuncias">Denuncias Ciudadanas</h1>
+        <p class="intro-denuncias">
+            ¿Viste algo que la comunidad debería saber? Cuéntanos tu denuncia. Tus datos de contacto son
+            solo para verificar la información contigo, nunca se publican.
+        </p>
+
+        <section class="contacto">
+            <form class="form-contacto" id="form-denuncia">
+                <input type="text" name="sitio_web" class="campo-trampa" tabindex="-1" autocomplete="off" />
+                <input type="text" name="nombre" placeholder="Nombre" required />
+                <input type="text" name="apellido" placeholder="Apellido" required />
+                <input type="email" name="correo" placeholder="Correo electrónico" required />
+                <input type="tel" name="celular" placeholder="Celular" required />
+                <textarea name="denuncia" placeholder="Cuéntanos tu denuncia" rows="6" required></textarea>
+
+                <div class="campo-adjunto">
+                    <label for="foto-denuncia">Foto (opcional, hasta 95MB en total con el video)</label>
+                    <input type="file" name="foto" id="foto-denuncia" accept="image/*" />
+                </div>
+                <div class="campo-adjunto">
+                    <label for="video-denuncia">Video (opcional, hasta 95MB en total con la foto)</label>
+                    <input type="file" name="video" id="video-denuncia" accept="video/*" />
+                </div>
+
+                <button type="submit">Enviar Denuncia</button>
+                <p class="form-estado" id="form-estado" role="status"></p>
+            </form>
+        </section>
+    </main>
+</Layout>
+
+<script>
+    const LIMITE_BYTES = 95 * 1024 * 1024;
+
+    const formulario = document.getElementById('form-denuncia') as HTMLFormElement;
+    const estado = document.getElementById('form-estado') as HTMLParagraphElement;
+    const campoFoto = document.getElementById('foto-denuncia') as HTMLInputElement;
+    const campoVideo = document.getElementById('video-denuncia') as HTMLInputElement;
+
+    formulario.addEventListener('submit', async (evento) => {
+        evento.preventDefault();
+
+        const pesoTotal = (campoFoto.files?.[0]?.size ?? 0) + (campoVideo.files?.[0]?.size ?? 0);
+        if (pesoTotal > LIMITE_BYTES) {
+            estado.textContent = 'La foto y el video juntos no pueden pesar más de 95MB.';
+            estado.className = 'form-estado form-estado-error';
+            return;
+        }
+
+        const boton = formulario.querySelector('button') as HTMLButtonElement;
+        boton.disabled = true;
+        estado.textContent = 'Enviando...';
+        estado.className = 'form-estado';
+
+        try {
+            const respuesta = await fetch('https://koncevision-denuncia.videocamchile.workers.dev', {
+                method: 'POST',
+                body: new FormData(formulario),
+            });
+            const resultado = await respuesta.json();
+
+            if (respuesta.ok && resultado.ok) {
+                estado.textContent = '¡Gracias! Recibimos tu denuncia, la revisaremos a la brevedad.';
+                estado.className = 'form-estado form-estado-ok';
+                formulario.reset();
+            } else {
+                throw new Error(resultado.error ?? 'Error desconocido');
+            }
+        } catch {
+            estado.textContent = 'No pudimos enviar tu denuncia. Intenta de nuevo en unos minutos.';
+            estado.className = 'form-estado form-estado-error';
+        } finally {
+            boton.disabled = false;
+        }
+    });
+</script>
+
+<style>
+    .pagina-denuncias {
+        padding: 40px 20px;
+    }
+
+    .titulo-denuncias {
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+
+    .intro-denuncias {
+        color: #4b5563;
+        font-size: 1.1rem;
+        margin: 0;
+        max-width: 640px;
+    }
+
+    .contacto {
+        display: grid;
+        grid-template-columns: 1fr;
+        max-width: 640px;
+        gap: 24px;
+        margin-top: 40px;
+    }
+
+    .form-contacto {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        background: var(--azul-estudio);
+        color: var(--blanco-senal);
+        padding: 30px;
+        border-radius: 4px;
+    }
+
+    .campo-trampa {
+        position: absolute;
+        left: -9999px;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+    }
+
+    .form-contacto input,
+    .form-contacto textarea {
+        padding: 12px;
+        border: 1px solid var(--azul-medianoche);
+        border-radius: 4px;
+        font-family: var(--fuente-cuerpo);
+        background: white;
+        color: var(--carbon);
+    }
+
+    .campo-adjunto {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .campo-adjunto label {
+        font-size: 0.9rem;
+    }
+
+    .campo-adjunto input {
+        background: white;
+        border-radius: 4px;
+        padding: 8px;
+    }
+
+    .form-contacto button {
+        background: var(--rojo-konce);
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: var(--fuente-display);
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        font-size: 1rem;
+    }
+
+    .form-contacto button:hover {
+        background: var(--rojo-konce-oscuro);
+    }
+
+    .form-contacto button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .form-estado {
+        margin: 0;
+        font-size: 0.95rem;
+        min-height: 1.2em;
+    }
+
+    .form-estado-ok {
+        color: #86efac;
+    }
+
+    .form-estado-error {
+        color: #fca5a5;
+    }
+</style>
