@@ -48,12 +48,12 @@ import ViewfinderFrame from '../components/ViewfinderFrame.astro';
                     <p class="eyebrow-seccion">02 · Pruebas (opcional)</p>
                     <div class="grid-adjuntos">
                         <div class="campo-adjunto">
-                            <label for="foto-denuncia">Foto (hasta 95MB en total con el video)</label>
-                            <input type="file" name="foto" id="foto-denuncia" accept="image/*" />
+                            <label for="foto-denuncia">Fotos (una o más, hasta 95MB en total con los videos)</label>
+                            <input type="file" name="foto" id="foto-denuncia" accept="image/*" multiple />
                         </div>
                         <div class="campo-adjunto">
-                            <label for="video-denuncia">Video (hasta 95MB en total con la foto)</label>
-                            <input type="file" name="video" id="video-denuncia" accept="video/*" />
+                            <label for="video-denuncia">Videos (uno o más, hasta 95MB en total con las fotos)</label>
+                            <input type="file" name="video" id="video-denuncia" accept="video/*" multiple />
                         </div>
                     </div>
                 </section>
@@ -98,9 +98,11 @@ import ViewfinderFrame from '../components/ViewfinderFrame.astro';
     formulario.addEventListener('submit', async (evento) => {
         evento.preventDefault();
 
-        const pesoTotal = (campoFoto.files?.[0]?.size ?? 0) + (campoVideo.files?.[0]?.size ?? 0);
+        const sumarPeso = (lista: FileList | null) =>
+            Array.from(lista ?? []).reduce((suma, archivo) => suma + archivo.size, 0);
+        const pesoTotal = sumarPeso(campoFoto.files) + sumarPeso(campoVideo.files);
         if (pesoTotal > LIMITE_BYTES) {
-            estado.textContent = 'La foto y el video juntos no pueden pesar más de 95MB.';
+            estado.textContent = 'Las fotos y los videos juntos no pueden pesar más de 95MB.';
             estado.className = 'form-estado form-estado-error';
             return;
         }
