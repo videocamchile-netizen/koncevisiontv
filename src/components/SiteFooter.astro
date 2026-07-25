@@ -13,7 +13,11 @@ const anio = new Date().getFullYear();
 
         <nav class="pie-nav">
             <a href="/">Inicio</a>
+            <a href="/categoria/nacional">Nacional</a>
+            <a href="/categoria/internacional">Internacional</a>
+            <a href="/categoria/economia">Economía</a>
             <a href="/publicidad">Publicidad</a>
+            <a href="/denuncias">Denuncias</a>
             <a href="https://www.youtube.com/@KoncevisionTV" target="_blank" rel="noopener noreferrer">YouTube</a>
         </nav>
     </div>
@@ -59,8 +63,9 @@ const anio = new Date().getFullYear();
 
     .pie-nav {
         display: flex;
-        flex-direction: column;
-        gap: 10px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px 24px;
         font-family: 'Playfair Display', serif;
         font-weight: 600;
         text-transform: none;
