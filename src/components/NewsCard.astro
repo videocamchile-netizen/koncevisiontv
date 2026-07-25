@@ -6,12 +6,13 @@ interface Props {
     enlace: string;
     categoria: string;
     fecha: Date;
+    compacta?: boolean;
 }
-const { titulo, resumen, imagenUrl, enlace, categoria, fecha } = Astro.props;
+const { titulo, resumen, imagenUrl, enlace, categoria, fecha, compacta = false } = Astro.props;
 const fechaFormateada = fecha.toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
 
-<article class="tarjeta">
+<article class:list={['tarjeta', { 'tarjeta-compacta': compacta }]}>
     <a href={enlace} class="tarjeta-imagen-link">
         {imagenUrl ? (
             <img src={imagenUrl} alt={titulo} width={600} height={400} loading="lazy" class="tarjeta-imagen" />
@@ -24,8 +25,12 @@ const fechaFormateada = fecha.toLocaleDateString('es-CL', { day: 'numeric', mont
         <h2 class="tarjeta-titulo">
             <a href={enlace}>{titulo}</a>
         </h2>
-        <p class="tarjeta-fecha">{fechaFormateada}</p>
-        <p class="tarjeta-resumen">{resumen}</p>
+        {!compacta && (
+            <>
+                <p class="tarjeta-fecha">{fechaFormateada}</p>
+                <p class="tarjeta-resumen">{resumen}</p>
+            </>
+        )}
     </div>
 </article>
 
@@ -34,6 +39,21 @@ const fechaFormateada = fecha.toLocaleDateString('es-CL', { day: 'numeric', mont
         border-bottom: 1px solid var(--rojo-konce);
         padding-bottom: 24px;
         margin-bottom: 24px;
+    }
+
+    .tarjeta-compacta {
+        padding-bottom: 0;
+        margin-bottom: 0;
+        border-bottom: none;
+    }
+
+    .tarjeta-compacta .tarjeta-cuerpo {
+        padding-top: 10px;
+    }
+
+    .tarjeta-compacta .tarjeta-titulo {
+        font-size: 1rem;
+        line-height: 1.3;
     }
 
     .tarjeta-imagen-link {
