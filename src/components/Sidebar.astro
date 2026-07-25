@@ -5,9 +5,10 @@ import { getCollection } from 'astro:content';
 
 interface Props {
     anuncioLateral?: boolean;
+    ultimasNoticias?: { id: string; titulo: string; tiempo: string }[];
 }
 
-const { anuncioLateral = false } = Astro.props;
+const { anuncioLateral = false, ultimasNoticias = [] } = Astro.props;
 
 const CATEGORIAS_DESTACADAS = ['Nacional', 'Internacional', 'Economía'];
 
@@ -19,6 +20,24 @@ const miniaturaPrograma = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.
 ---
 
 <aside class="sidebar">
+    {ultimasNoticias.length > 0 && (
+        <section class="bloque">
+            <h2 class="bloque-titulo">Últimas Noticias</h2>
+            <ul class="lista-leidas">
+                {ultimasNoticias.map((noticia) => (
+                    <li>
+                        <a href={`/noticias/${noticia.id}`}>
+                            <span class="lista-ultimas-cuerpo">
+                                <span class="lista-ultimas-tiempo">{noticia.tiempo}</span>
+                                <span>{noticia.titulo}</span>
+                            </span>
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        </section>
+    )}
+
     <section class="bloque">
         <h2 class="bloque-titulo">Más Leídas</h2>
         {masLeidas.length === 0 ? (
@@ -156,6 +175,21 @@ const miniaturaPrograma = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.
         font-size: 1.2rem;
         line-height: 1;
         flex-shrink: 0;
+    }
+
+    .lista-ultimas-cuerpo {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .lista-ultimas-tiempo {
+        font-family: var(--fuente-cuerpo);
+        color: var(--rojo-konce);
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
     }
 
     .lista-categorias {

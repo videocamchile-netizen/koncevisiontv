@@ -41,7 +41,13 @@ function agruparEnBloques(lista, tamano) {
 
 const principal = conDiagramacion ? noticias[0] : undefined;
 const secundaria = conDiagramacion ? noticias[1] : undefined;
-const listaLateral = conDiagramacion ? noticias.slice(2, 7) : [];
+const listaLateral = conDiagramacion
+    ? noticias.slice(2, 7).map((noticia) => ({
+          id: noticia.id,
+          titulo: noticia.data.titulo,
+          tiempo: tiempoRelativo(noticia.data.agregada ?? noticia.data.fecha),
+      }))
+    : [];
 const compactas = conDiagramacion ? noticias.slice(7, 11) : [];
 const restoNoticias = conDiagramacion ? noticias.slice(11) : noticias;
 const bloquesResto = conDiagramacion ? agruparEnBloques(restoNoticias, 4) : [];
@@ -96,27 +102,6 @@ const bloquesResto = conDiagramacion ? agruparEnBloques(restoNoticias, 4) : [];
                                 <h3 class="hero-secundaria-titulo">{secundaria.data.titulo}</h3>
                                 <p class="hero-secundaria-resumen">{secundaria.data.resumen}</p>
                             </a>
-                        )}
-
-                        {listaLateral.length > 0 && (
-                            <div class="hero-lista">
-                                <h2 class="hero-lista-titulo">
-                                    <span class="hero-lista-punto"></span>
-                                    Últimas Noticias
-                                </h2>
-                                <ul class="hero-lista-items">
-                                    {listaLateral.map((noticia) => (
-                                        <li>
-                                            <a href={`/noticias/${noticia.id}`}>
-                                                <span class="hero-lista-tiempo">
-                                                    {tiempoRelativo(noticia.data.agregada ?? noticia.data.fecha)}
-                                                </span>
-                                                <span class="hero-lista-titulo-item">{noticia.data.titulo}</span>
-                                            </a>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
                         )}
                     </section>
                 )}
@@ -194,7 +179,7 @@ const bloquesResto = conDiagramacion ? agruparEnBloques(restoNoticias, 4) : [];
                 )}
             </div>
 
-            <Sidebar />
+            <Sidebar ultimasNoticias={listaLateral} />
         </div>
     </main>
 </Layout>
@@ -221,7 +206,7 @@ const bloquesResto = conDiagramacion ? agruparEnBloques(restoNoticias, 4) : [];
 
     .hero-categoria {
         display: grid;
-        grid-template-columns: 1.5fr 1fr 1fr;
+        grid-template-columns: 1.6fr 1fr;
         align-items: start;
         gap: 24px;
         margin-bottom: 32px;
@@ -339,73 +324,6 @@ const bloquesResto = conDiagramacion ? agruparEnBloques(restoNoticias, 4) : [];
         margin-top: 8px;
     }
 
-    .hero-lista-titulo {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        border-bottom: 3px solid var(--rojo-konce);
-        padding-bottom: 8px;
-        margin-bottom: 14px;
-        font-size: 1.1rem;
-    }
-
-    .hero-lista-punto {
-        width: 9px;
-        height: 9px;
-        border-radius: 50%;
-        background: var(--rojo-konce);
-        flex-shrink: 0;
-    }
-
-    .hero-lista-items {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .hero-lista-items li {
-        padding: 10px 0;
-        border-bottom: 1px dashed var(--borde-suave);
-    }
-
-    .hero-lista-items li:first-child {
-        padding-top: 0;
-    }
-
-    .hero-lista-items li:last-child {
-        padding-bottom: 0;
-        border-bottom: none;
-    }
-
-    .hero-lista-items a {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        text-decoration: none;
-        color: var(--carbon);
-    }
-
-    .hero-lista-tiempo {
-        font-family: var(--fuente-cuerpo);
-        color: var(--rojo-konce);
-        font-size: 0.72rem;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-    }
-
-    .hero-lista-titulo-item {
-        font-family: 'Playfair Display', serif;
-        font-weight: 600;
-        font-size: 0.92rem;
-        line-height: 1.3;
-    }
-
-    .hero-lista-items a:hover .hero-lista-titulo-item {
-        color: var(--rojo-konce);
-    }
-
     .noticias-grid-compacta {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -417,7 +335,7 @@ const bloquesResto = conDiagramacion ? agruparEnBloques(restoNoticias, 4) : [];
 
     .bloque-resto {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1.6fr 1fr;
         gap: 32px;
         padding-bottom: 28px;
         margin-bottom: 28px;
