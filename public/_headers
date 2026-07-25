@@ -1,0 +1,7 @@
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.web3forms.com https://koncevision-denuncia.videocamchile.workers.dev https://www.youtube.com https://abacus.jasoncameron.dev; frame-src https://www.youtube.com https://rumble.com https://www.bitchute.com; object-src 'none'; base-uri 'self'; form-action 'self' https://api.web3forms.com https://koncevision-denuncia.videocamchile.workers.dev; frame-ancestors 'none'
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=()
+  X-Frame-Options: DENY
