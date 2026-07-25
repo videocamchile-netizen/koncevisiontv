@@ -75,8 +75,15 @@ import ViewfinderFrame from '../components/ViewfinderFrame.astro';
                     >
                         Subir archivo pesado
                     </a>
+                    <p class="nota-dropbox">Nota: los archivos enviados por este medio no se borran automáticamente.</p>
                 </aside>
             </div>
+
+            <p class="aviso-privacidad">
+                Tus datos y archivos se usan solo para revisar esta denuncia y se eliminan
+                automáticamente a los 15 días. No se comparten con terceros, salvo requerimiento
+                de autoridad competente.
+            </p>
 
             <button type="submit">Enviar Denuncia <span class="flecha">→</span></button>
             <p class="form-estado" id="form-estado" role="status"></p>
@@ -362,6 +369,23 @@ import ViewfinderFrame from '../components/ViewfinderFrame.astro';
         letter-spacing: 0.01em;
         color: var(--gris-metalico);
         margin: 12px 0 0;
+    }
+
+    .nota-dropbox {
+        font-family: var(--fuente-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.01em;
+        color: var(--gris-metalico);
+        margin: 10px 0 0;
+    }
+
+    .aviso-privacidad {
+        font-family: var(--fuente-mono);
+        font-size: 0.78rem;
+        letter-spacing: 0.01em;
+        color: var(--gris-metalico);
+        margin: 20px 0 0;
+        max-width: 640px;
     }
 
     .grid-pruebas {
