@@ -9,7 +9,7 @@ export async function GET(context: APIContext) {
 
     return rss({
         title: 'Koncevision TV',
-        description: 'Noticias al instante, redactadas y publicadas de forma automática.',
+        description: 'Tu imagen, tu voz. Somos un medio de comunicación social trabajando por Chile.',
         site: context.site!,
         items: noticias.map((noticia) => ({
             title: noticia.data.titulo,
