@@ -23,9 +23,37 @@ async function esVideoDelCanal(videoId) {
     return datos.author_url === CANAL_URL_OEMBED;
 }
 
+// Busca el videoId más CERCANO a una posición dada en el HTML (no el primero
+// de toda la página), asumiendo que en el JSON embebido de YouTube el videoId
+// vive dentro del mismo objeto que su propio "isLive" — están a poca distancia
+// de texto entre sí, a diferencia de un videoId de otro video cualquiera.
+function videoIdMasCercano(html, posicion) {
+    const desde = Math.max(0, posicion - 1500);
+    const hasta = Math.min(html.length, posicion + 1500);
+    const ventana = html.slice(desde, hasta);
+    const posEnVentana = posicion - desde;
+
+    let mejorVideoId = null;
+    let mejorDistancia = Infinity;
+    const regex = /"videoId":"([^"]+)"/g;
+    let coincidencia;
+    while ((coincidencia = regex.exec(ventana))) {
+        const distancia = Math.abs(coincidencia.index - posEnVentana);
+        if (distancia < mejorDistancia) {
+            mejorDistancia = distancia;
+            mejorVideoId = coincidencia[1];
+        }
+    }
+    return mejorVideoId;
+}
+
 // El oEmbed de YouTube apuntando a /live NO funciona (siempre devuelve 404),
 // así que para detectar si el canal está transmitiendo hay que descargar la
-// página /live y buscar "isLive":true en su HTML.
+// página /live y buscar "isLive":true en su HTML. Cuando el canal NO está en
+// vivo, /live redirige a la home del canal, que puede traer recomendaciones
+// de OTROS canales — si alguna está en vivo, aparece "isLive":true igual,
+// así que cada candidato se valida por posición (videoIdMasCercano) y por
+// canal real (esVideoDelCanal) antes de aceptarlo.
 async function detectarEnVivo() {
     const respuesta = await fetch(LIVE_URL, {
         headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
@@ -33,22 +61,26 @@ async function detectarEnVivo() {
     if (!respuesta.ok) return null;
 
     const html = await respuesta.text();
-    if (!html.includes('"isLive":true')) return null;
+    const regexIsLive = /"isLive":true/g;
+    let coincidenciaIsLive;
+    const yaProbados = new Set();
 
-    const matchVideoId = html.match(/"videoId":"([^"]+)"/);
-    if (!matchVideoId) return null;
+    while ((coincidenciaIsLive = regexIsLive.exec(html))) {
+        const videoId = videoIdMasCercano(html, coincidenciaIsLive.index);
+        if (!videoId || yaProbados.has(videoId)) continue;
+        yaProbados.add(videoId);
 
-    const videoId = matchVideoId[1];
-    if (!(await esVideoDelCanal(videoId))) {
+        if (await esVideoDelCanal(videoId)) {
+            const matchTitulo = html.match(/<title>([^<]+)<\/title>/);
+            return {
+                videoId,
+                titulo: matchTitulo ? matchTitulo[1].replace(/ - YouTube$/, '') : 'Transmisión en vivo',
+            };
+        }
         console.log(`Descartado: "${videoId}" está en vivo pero no es del canal de Koncevision.`);
-        return null;
     }
 
-    const matchTitulo = html.match(/<title>([^<]+)<\/title>/);
-    return {
-        videoId,
-        titulo: matchTitulo ? matchTitulo[1].replace(/ - YouTube$/, '') : 'Transmisión en vivo',
-    };
+    return null;
 }
 
 async function obtenerUltimoDelFeed() {
