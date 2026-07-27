@@ -12,6 +12,8 @@ const GROQ_MODEL = process.env.GROQ_MODEL || 'llama-3.1-8b-instant';
 const MAX_NUEVAS_POR_FUENTE = Number(process.env.MAX_NUEVAS_POR_FUENTE) || 2;
 const MAX_DEPORTES_POR_CORRIDA = Number(process.env.MAX_DEPORTES_POR_CORRIDA) || 1;
 let deportesEnCorrida = 0;
+const MAX_HORAS_ANTIGUEDAD = Number(process.env.MAX_HORAS_ANTIGUEDAD) || 24;
+const MAX_ANTIGUEDAD_MS = MAX_HORAS_ANTIGUEDAD * 60 * 60 * 1000;
 
 if (!process.env.GEMINI_API_KEY) {
     console.error('Falta la variable de entorno GEMINI_API_KEY.');
@@ -234,6 +236,14 @@ async function procesarFuente(fuente, loteTimestamp) {
             const slug = slugify(String(slugBase));
             const rutaArchivo = path.join(NOTICIAS_DIR, `${slug}.md`);
             if (existsSync(rutaArchivo)) continue;
+
+            if (item.pubDate) {
+                const antiguedadMs = Date.now() - new Date(item.pubDate).getTime();
+                if (antiguedadMs > MAX_ANTIGUEDAD_MS) {
+                    console.log(`Descartada por antigua (${Math.round(antiguedadMs / 3600000)}h): ${slug}`);
+                    continue;
+                }
+            }
 
             const cuerpoOriginalHtml = item['content:encoded'] ?? item.description ?? '';
             let cuerpoOriginal = limpiarHtml(String(cuerpoOriginalHtml));
