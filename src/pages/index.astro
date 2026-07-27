@@ -58,7 +58,7 @@ const paraGrid = resto.slice(0, 9);
                                     <span class="destacada-categoria">{destacada.data.categoria}</span>
                                     <h1 class="destacada-titulo">{destacada.data.titulo}</h1>
                                     <p class="destacada-fecha">
-                                        {destacada.data.fecha.toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}
+                                        {destacada.data.fecha.toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'America/Santiago' })}
                                     </p>
                                 </div>
                             </a>

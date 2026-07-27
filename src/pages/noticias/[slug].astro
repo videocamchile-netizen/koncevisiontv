@@ -29,7 +29,7 @@ const linkX = `https://twitter.com/intent/tweet?text=${encodeURIComponent(titulo
                 <span class="hero-categoria">{categoria}</span>
                 <h1 class="hero-titulo">{titulo}</h1>
                 <p class="hero-meta">
-                    {fecha.toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    {fecha.toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'America/Santiago' })}
                     {imagenCredito && ` · Imagen: ${imagenCredito}`}
                 </p>
             </div>

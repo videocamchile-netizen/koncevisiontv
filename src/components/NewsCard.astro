@@ -9,7 +9,7 @@ interface Props {
     compacta?: boolean;
 }
 const { titulo, resumen, imagenUrl, enlace, categoria, fecha, compacta = false } = Astro.props;
-const fechaFormateada = fecha.toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' });
+const fechaFormateada = fecha.toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'America/Santiago' });
 ---
 
 <article class:list={['tarjeta', { 'tarjeta-compacta': compacta }]}>
