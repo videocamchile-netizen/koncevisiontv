@@ -3,13 +3,29 @@ import path from 'node:path';
 import { XMLParser } from 'fast-xml-parser';
 
 const CHANNEL_ID = 'UCvdeRKMWaVgk7sQM_0zRqrQ';
+const CANAL_URL_OEMBED = 'https://www.youtube.com/@KoncevisionTV';
 const FEED_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
 const LIVE_URL = `https://www.youtube.com/channel/${CHANNEL_ID}/live`;
 const DATA_PATH = path.join(process.cwd(), 'src/data/ultimo-programa.json');
 
+// Verifica con el oEmbed público (gratis, sin cuota) que el videoId realmente
+// pertenece al canal de Koncevision. Es la única forma confiable de descartar
+// falsos positivos: cuando el canal NO está en vivo, /live redirige a la home
+// del canal, que puede incluir recomendaciones de OTROS canales — si alguna
+// de esas recomendaciones está en vivo, aparece "isLive":true en la página
+// aunque no tenga nada que ver con Koncevision.
+async function esVideoDelCanal(videoId) {
+    const respuesta = await fetch(
+        `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`,
+    );
+    if (!respuesta.ok) return false;
+    const datos = await respuesta.json();
+    return datos.author_url === CANAL_URL_OEMBED;
+}
+
 // El oEmbed de YouTube apuntando a /live NO funciona (siempre devuelve 404),
-// así que la única forma confiable de saber si el canal está transmitiendo
-// es descargar la página /live y buscar "isLive":true en su HTML.
+// así que para detectar si el canal está transmitiendo hay que descargar la
+// página /live y buscar "isLive":true en su HTML.
 async function detectarEnVivo() {
     const respuesta = await fetch(LIVE_URL, {
         headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
@@ -20,11 +36,17 @@ async function detectarEnVivo() {
     if (!html.includes('"isLive":true')) return null;
 
     const matchVideoId = html.match(/"videoId":"([^"]+)"/);
-    const matchTitulo = html.match(/<title>([^<]+)<\/title>/);
     if (!matchVideoId) return null;
 
+    const videoId = matchVideoId[1];
+    if (!(await esVideoDelCanal(videoId))) {
+        console.log(`Descartado: "${videoId}" está en vivo pero no es del canal de Koncevision.`);
+        return null;
+    }
+
+    const matchTitulo = html.match(/<title>([^<]+)<\/title>/);
     return {
-        videoId: matchVideoId[1],
+        videoId,
         titulo: matchTitulo ? matchTitulo[1].replace(/ - YouTube$/, '') : 'Transmisión en vivo',
     };
 }
