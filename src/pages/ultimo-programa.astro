@@ -14,7 +14,7 @@ const titulo = programa.enVivo ? '🔴 En Vivo' : 'En Vivo / Último Programa';
         <div class="reproductor" data-video-id={programa.videoId} data-en-vivo={programa.enVivo} id="reproductor">
             {programa.enVivo ? (
                 <iframe
-                    src={`https://www.youtube.com/embed/${programa.videoId}?autoplay=1`}
+                    src={`https://www.youtube.com/embed/${programa.videoId}?autoplay=1&start=0`}
                     title="Koncevision TV — En Vivo"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen
