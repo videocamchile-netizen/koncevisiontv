@@ -10,6 +10,8 @@ const SOURCES_PATH = path.join(process.cwd(), 'sources.json');
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-flash-lite-latest';
 const GROQ_MODEL = process.env.GROQ_MODEL || 'llama-3.1-8b-instant';
 const MAX_NUEVAS_POR_FUENTE = Number(process.env.MAX_NUEVAS_POR_FUENTE) || 2;
+const MAX_DEPORTES_POR_CORRIDA = Number(process.env.MAX_DEPORTES_POR_CORRIDA) || 1;
+let deportesEnCorrida = 0;
 
 if (!process.env.GEMINI_API_KEY) {
     console.error('Falta la variable de entorno GEMINI_API_KEY.');
@@ -251,6 +253,11 @@ async function procesarFuente(fuente, loteTimestamp) {
                 fuenteNombre: fuente.nombre,
             });
 
+            if (redactado.categoria === 'Deportes' && deportesEnCorrida >= MAX_DEPORTES_POR_CORRIDA) {
+                console.log(`Descartada por tope de Deportes de la corrida: ${slug}`);
+                continue;
+            }
+
             const frontmatter = {
                 titulo: redactado.titulo,
                 resumen: redactado.resumen,
@@ -266,6 +273,7 @@ async function procesarFuente(fuente, loteTimestamp) {
             const archivo = matter.stringify(redactado.cuerpo, frontmatter);
             writeFileSync(rutaArchivo, archivo, 'utf8');
             creadas++;
+            if (frontmatter.categoria === 'Deportes') deportesEnCorrida++;
             console.log(`Creada: ${slug}.md`);
         } catch (error) {
             if (error instanceof CuotaGeminiExcedidaError) throw error;
