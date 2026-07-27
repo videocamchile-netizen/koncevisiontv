@@ -68,7 +68,7 @@ const miniaturaPrograma = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.
     </section>
 
     <section class="bloque">
-        <h2 class="bloque-titulo">Último Programa</h2>
+        <h2 class="bloque-titulo">{programa.enVivo ? '🔴 En Vivo' : 'Último Programa'}</h2>
         <a href="/ultimo-programa" class="programa-card">
             <img src={miniaturaPrograma} alt={programa.titulo} loading="lazy" />
             <span>{programa.titulo}</span>
