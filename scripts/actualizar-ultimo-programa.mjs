@@ -38,8 +38,10 @@ async function estaEnVivo(videoId) {
     const respuesta = await fetch(`https://www.youtube.com/watch?v=${videoId}`, {
         headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
     });
+    console.log(`[debug] watch HTTP ${respuesta.status}, url final: ${respuesta.url}`);
     if (!respuesta.ok) return false;
     const html = await respuesta.text();
+    console.log(`[debug] watch HTML: ${html.length} caracteres, isLiveNow:true x${(html.match(/"isLiveNow":true/g) || []).length}, isLive":true x${(html.match(/"isLive":true/g) || []).length}, lengthSeconds=${(html.match(/"lengthSeconds":"(\d+)"/) || [])[1]}, contieneConsent=${html.includes('consent.youtube.com') || html.includes('Before you continue')}`);
     return html.includes('"isLiveNow":true');
 }
 
