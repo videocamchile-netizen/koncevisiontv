@@ -60,7 +60,11 @@ const linkX = `https://twitter.com/intent/tweet?text=${encodeURIComponent(titulo
                     </div>
 
                     <p class="fuente-box">
-                        Fuente original: <a href={fuenteUrl} target="_blank" rel="noopener noreferrer nofollow">{fuenteNombre}</a>
+                        {fuenteNombre === 'The Epoch Times en Español' ? (
+                            <>Fuente original: <a href={fuenteUrl} target="_blank" rel="noopener noreferrer nofollow">{fuenteNombre}</a></>
+                        ) : (
+                            <>Fuente original: {fuenteNombre}</>
+                        )}
                     </p>
 
                     <a href="/" class="volver">&larr; Volver a Últimas Noticias</a>
