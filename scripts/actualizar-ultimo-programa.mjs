@@ -58,9 +58,11 @@ async function detectarEnVivo() {
     const respuesta = await fetch(LIVE_URL, {
         headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
     });
+    console.log(`[debug] HTTP ${respuesta.status}, redirigido a: ${respuesta.url}`);
     if (!respuesta.ok) return null;
 
     const html = await respuesta.text();
+    console.log(`[debug] HTML recibido: ${html.length} caracteres, contiene "isLive":true x${(html.match(/"isLive":true/g) || []).length}, contiene "isLiveNow":true x${(html.match(/"isLiveNow":true/g) || []).length}`);
     const regexIsLive = /"isLive":true/g;
     let coincidenciaIsLive;
     const yaProbados = new Set();
