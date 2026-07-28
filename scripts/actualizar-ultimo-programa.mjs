@@ -34,14 +34,20 @@ async function obtenerUltimoDelFeed() {
 // detectar el propio directo). Como el feed RSS solo lista videos del propio
 // canal, este enfoque además elimina por completo el riesgo de tomar un
 // video de otro canal, sin necesitar verificación aparte.
+// NOTA: confirmado con debug real (2026-07-28) que desde los runners de
+// GitHub Actions esta página llega SIN el campo "isLiveNow" (ni "lengthSeconds"),
+// aunque el tamaño de la página es casi idéntico al que se recibe desde Chile
+// — YouTube omite ese dato específico cuando reconoce al que pregunta como
+// bot/datacenter, en vez de bloquear con 403. Por eso este chequeo por scraping
+// NO detecta el en vivo de forma confiable desde GitHub Actions todavía;
+// pendiente reemplazar por YouTube Data API v3 (videos.list, ~1 unidad por
+// llamada) antes de confiar en esto para producción.
 async function estaEnVivo(videoId) {
     const respuesta = await fetch(`https://www.youtube.com/watch?v=${videoId}`, {
         headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
     });
-    console.log(`[debug] watch HTTP ${respuesta.status}, url final: ${respuesta.url}`);
     if (!respuesta.ok) return false;
     const html = await respuesta.text();
-    console.log(`[debug] watch HTML: ${html.length} caracteres, isLiveNow:true x${(html.match(/"isLiveNow":true/g) || []).length}, isLive":true x${(html.match(/"isLive":true/g) || []).length}, lengthSeconds=${(html.match(/"lengthSeconds":"(\d+)"/) || [])[1]}, contieneConsent=${html.includes('consent.youtube.com') || html.includes('Before you continue')}`);
     return html.includes('"isLiveNow":true');
 }
 
