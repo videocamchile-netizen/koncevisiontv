@@ -1,8 +1,9 @@
 name: Actualizar último programa
 
+# Sin trigger de "schedule" a propósito: el cron nativo de GitHub Actions
+# se estaba saltando corridas sin motivo. Ahora un Cron Trigger de Cloudflare
+# Workers (más confiable) llama a este workflow_dispatch cada 30 min.
 on:
-  schedule:
-    - cron: '25,55 * * * *'
   workflow_dispatch:
 
 permissions:
