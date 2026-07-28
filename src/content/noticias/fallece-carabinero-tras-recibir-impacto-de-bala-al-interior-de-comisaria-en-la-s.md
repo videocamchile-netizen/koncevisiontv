@@ -11,7 +11,7 @@ imagenCredito: CONTEXTO | Agencia UNO
 fuenteNombre: BioBioChile
 fuenteUrl: >-
   https://www.biobiochile.cl/noticias/nacional/region-de-coquimbo/2026/07/28/fallece-carabinero-tras-recibir-impacto-de-bala-al-interior-de-comisaria-en-la-serena.shtml
-fecha: '2026-07-28T00:01:25.000Z'
+fecha: '2026-07-28T04:01:25.000Z'
 agregada: '2026-07-28T04:44:25.986Z'
 ---
 Durante la noche del pasado lunes, un trágico incidente enluta a la institución policial en la región de Coquimbo. Un funcionario de Carabineros perdió la vida tras recibir un impacto balístico al interior de la Sexta Comisaría del sector Las Compañías, en la comuna de La Serena.
