@@ -74,6 +74,7 @@ const bloquesResto = conDiagramacion ? agruparEnBloques(restoNoticias, 4) : [];
                                         width={800}
                                         height={500}
                                         class="hero-principal-imagen"
+                                        onerror="this.onerror=null;this.src='/placeholder.svg';"
                                     />
                                 ) : (
                                     <img src="/placeholder.svg" alt={principal.data.titulo} class="hero-principal-imagen" />
@@ -94,6 +95,7 @@ const bloquesResto = conDiagramacion ? agruparEnBloques(restoNoticias, 4) : [];
                                         width={600}
                                         height={375}
                                         class="hero-secundaria-imagen"
+                                        onerror="this.onerror=null;this.src='/placeholder.svg';"
                                     />
                                 ) : (
                                     <img src="/placeholder.svg" alt={secundaria.data.titulo} class="hero-secundaria-imagen" />

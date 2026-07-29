@@ -15,7 +15,15 @@ const fechaFormateada = fecha.toLocaleDateString('es-CL', { day: 'numeric', mont
 <article class:list={['tarjeta', { 'tarjeta-compacta': compacta }]}>
     <a href={enlace} class="tarjeta-imagen-link">
         {imagenUrl ? (
-            <img src={imagenUrl} alt={titulo} width={600} height={400} loading="lazy" class="tarjeta-imagen" />
+            <img
+                src={imagenUrl}
+                alt={titulo}
+                width={600}
+                height={400}
+                loading="lazy"
+                class="tarjeta-imagen"
+                onerror="this.onerror=null;this.src='/placeholder.svg';"
+            />
         ) : (
             <img src="/placeholder.svg" alt={titulo} loading="lazy" class="tarjeta-imagen" />
         )}

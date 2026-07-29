@@ -24,7 +24,16 @@ const linkX = `https://twitter.com/intent/tweet?text=${encodeURIComponent(titulo
 <Layout title={titulo} description={resumen} image={imagen} type="article" publishedTime={fecha}>
     <main class="pagina-articulo">
         <div class="articulo-hero">
-            {imagen && <img src={imagen} alt={titulo} width={1600} height={900} class="hero-imagen" />}
+            {imagen && (
+                <img
+                    src={imagen}
+                    alt={titulo}
+                    width={1600}
+                    height={900}
+                    class="hero-imagen"
+                    onerror="this.onerror=null;this.src='/placeholder.svg';"
+                />
+            )}
             <div class="hero-chyron contenedor">
                 <span class="hero-categoria">{categoria}</span>
                 <h1 class="hero-titulo">{titulo}</h1>
@@ -101,6 +110,7 @@ const linkX = `https://twitter.com/intent/tweet?text=${encodeURIComponent(titulo
 
     .hero-imagen {
         width: 100%;
+        height: auto;
         aspect-ratio: 16 / 9;
         max-height: 640px;
         object-fit: cover;
