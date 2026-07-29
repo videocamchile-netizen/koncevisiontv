@@ -25,30 +25,30 @@ async function obtenerUltimoDelFeed() {
 // El feed RSS del canal siempre incluye su video más reciente, esté en vivo o
 // no (confirmado con curl real: el video en vivo aparece ahí apenas empieza a
 // transmitir). Por eso conviene chequear el estado real de ESE video puntual
-// en su propia página de watch, en vez de escanear /live del canal como se
-// hacía antes: esa página mostraba resultados distintos según la ubicación
-// de quien pregunta — funcionaba bien desde Chile, pero desde los runners de
-// GitHub Actions (EE.UU.) no marcaba el video propio como en vivo, aunque sí
-// mostraba en vivo de OTROS canales en su sección de recomendados (lo que
-// causó tanto el incidente de mostrar un canal ajeno como, después, el de no
-// detectar el propio directo). Como el feed RSS solo lista videos del propio
-// canal, este enfoque además elimina por completo el riesgo de tomar un
-// video de otro canal, sin necesitar verificación aparte.
-// NOTA: confirmado con debug real (2026-07-28) que desde los runners de
-// GitHub Actions esta página llega SIN el campo "isLiveNow" (ni "lengthSeconds"),
-// aunque el tamaño de la página es casi idéntico al que se recibe desde Chile
-// — YouTube omite ese dato específico cuando reconoce al que pregunta como
-// bot/datacenter, en vez de bloquear con 403. Por eso este chequeo por scraping
-// NO detecta el en vivo de forma confiable desde GitHub Actions todavía;
-// pendiente reemplazar por YouTube Data API v3 (videos.list, ~1 unidad por
-// llamada) antes de confiar en esto para producción.
+// en vez de escanear /live del canal como se hacía antes — el feed RSS solo
+// lista videos del propio canal, así que este enfoque elimina por completo
+// el riesgo de tomar un video de otro canal, sin necesitar verificación aparte.
+// Se usa YouTube Data API v3 (videos.list, ~1 unidad de cuota por llamada, muy
+// por debajo del límite gratis de 10.000/día) en vez de escanear el HTML de la
+// watch page: confirmado con debug real (2026-07-28) que los runners de GitHub
+// Actions reciben una versión de esa página SIN el campo "isLiveNow" (YouTube
+// omite ese dato cuando reconoce tráfico de datacenter, sin bloquear con 403),
+// así que el scraping nunca detectaba el en vivo de forma confiable ahí.
 async function estaEnVivo(videoId) {
-    const respuesta = await fetch(`https://www.youtube.com/watch?v=${videoId}`, {
-        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
-    });
-    if (!respuesta.ok) return false;
-    const html = await respuesta.text();
-    return html.includes('"isLiveNow":true');
+    const apiKey = process.env.YOUTUBE_API_KEY;
+    if (!apiKey) {
+        throw new Error('Falta la variable de entorno YOUTUBE_API_KEY.');
+    }
+
+    const url = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${apiKey}`;
+    const respuesta = await fetch(url);
+    if (!respuesta.ok) {
+        throw new Error(`YouTube Data API respondió HTTP ${respuesta.status}.`);
+    }
+
+    const datos = await respuesta.json();
+    const estado = datos.items?.[0]?.snippet?.liveBroadcastContent;
+    return estado === 'live';
 }
 
 async function main() {

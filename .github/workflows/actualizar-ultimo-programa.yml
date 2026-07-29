@@ -22,6 +22,8 @@ jobs:
       - run: npm ci
 
       - run: node scripts/actualizar-ultimo-programa.mjs
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
 
       - name: Commit y push si hay un programa nuevo
         run: |
