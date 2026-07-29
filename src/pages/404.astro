@@ -1,0 +1,60 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Página no encontrada" description="La página que buscas no existe o ya no está disponible.">
+    <main class="contenedor pagina-404">
+        <p class="codigo-404">404</p>
+        <h1>Esta página no existe</h1>
+        <p class="texto-404">
+            Puede que el enlace esté roto o que la noticia ya no esté disponible.
+        </p>
+        <a href="/" class="boton-404">Volver al inicio</a>
+    </main>
+</Layout>
+
+<style>
+    .pagina-404 {
+        padding: 100px 20px;
+        text-align: center;
+    }
+
+    .codigo-404 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 800;
+        font-size: 5rem;
+        color: var(--rojo-konce);
+        line-height: 1;
+        margin-bottom: 8px;
+    }
+
+    .pagina-404 h1 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 800;
+        font-size: 1.8rem;
+        text-transform: none;
+        letter-spacing: normal;
+        margin-bottom: 12px;
+    }
+
+    .texto-404 {
+        font-family: 'Lora', serif;
+        color: #4b5563;
+        margin-bottom: 24px;
+    }
+
+    .boton-404 {
+        display: inline-block;
+        background: var(--rojo-konce);
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+    }
+
+    .boton-404:hover {
+        background: var(--rojo-konce-oscuro);
+    }
+</style>
