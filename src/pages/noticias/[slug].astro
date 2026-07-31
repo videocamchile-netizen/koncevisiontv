@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Sidebar from '../../components/Sidebar.astro';
+import NewsCard from '../../components/NewsCard.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -14,6 +15,12 @@ export async function getStaticPaths() {
 const { noticia } = Astro.props;
 const { Content } = await render(noticia);
 const { titulo, resumen, categoria, imagen, imagenCredito, fuenteNombre, fuenteUrl, fecha } = noticia.data;
+
+const todasLasNoticias = await getCollection('noticias');
+const relacionadas = todasLasNoticias
+    .filter((n) => n.data.categoria === categoria && n.id !== noticia.id)
+    .sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime())
+    .slice(0, 3);
 
 const urlArticulo = new URL(`/noticias/${noticia.id}/`, Astro.site).toString();
 const linkWhatsapp = `https://wa.me/?text=${encodeURIComponent(`${titulo} ${urlArticulo}`)}`;
@@ -75,6 +82,25 @@ const linkX = `https://twitter.com/intent/tweet?text=${encodeURIComponent(titulo
                             <>Fuente original: {fuenteNombre}</>
                         )}
                     </p>
+
+                    {relacionadas.length > 0 && (
+                        <section class="noticias-relacionadas">
+                            <h2 class="relacionadas-titulo">También te puede interesar</h2>
+                            <div class="relacionadas-grid">
+                                {relacionadas.map((n) => (
+                                    <NewsCard
+                                        compacta
+                                        categoria={n.data.categoria}
+                                        enlace={`/noticias/${n.id}`}
+                                        imagenUrl={n.data.imagen}
+                                        resumen={n.data.resumen}
+                                        titulo={n.data.titulo}
+                                        fecha={n.data.fecha}
+                                    />
+                                ))}
+                            </div>
+                        </section>
+                    )}
 
                     <a href="/" class="volver">&larr; Volver a Últimas Noticias</a>
                 </div>
@@ -232,6 +258,34 @@ const linkX = `https://twitter.com/intent/tweet?text=${encodeURIComponent(titulo
 
     .fuente-box a:hover {
         color: var(--rojo-konce);
+    }
+
+    .noticias-relacionadas {
+        margin-top: 40px;
+        padding-top: 24px;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .relacionadas-titulo {
+        font-family: var(--fuente-display);
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--rojo-konce);
+        margin-bottom: 20px;
+    }
+
+    .relacionadas-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    @media (max-width: 640px) {
+        .relacionadas-grid {
+            grid-template-columns: 1fr;
+        }
     }
 
     .volver {
