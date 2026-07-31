@@ -6,10 +6,17 @@ const CHANNEL_ID = 'UCvdeRKMWaVgk7sQM_0zRqrQ';
 const FEED_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
 const DATA_PATH = path.join(process.cwd(), 'src/data/ultimo-programa.json');
 
+// YouTube tiene caídas intermitentes conocidas de este endpoint en 2026 (404/500
+// aunque el canal esté sano) — no es algo propio de este canal ni de nuestro
+// código, confirmado probando también con canales grandes ajenos. Se trata como
+// falla temporal, no como error real: el ciclo actual se salta en silencio y el
+// cron de 30 min lo reintenta solo, sin mandar correo de falla por cada caída.
+class FeedTemporalmenteCaidoError extends Error {}
+
 async function obtenerUltimoDelFeed() {
     const respuesta = await fetch(FEED_URL);
     if (!respuesta.ok) {
-        throw new Error(`No se pudo descargar el feed del canal (HTTP ${respuesta.status})`);
+        throw new FeedTemporalmenteCaidoError(`HTTP ${respuesta.status}`);
     }
 
     const xml = await respuesta.text();
@@ -75,4 +82,11 @@ async function main() {
     console.log(`Actualizado: "${titulo}" (${videoId})${enVivo ? ' [en vivo]' : ''}.`);
 }
 
-main();
+main().catch((error) => {
+    if (error instanceof FeedTemporalmenteCaidoError) {
+        console.log(`Feed de YouTube no disponible este ciclo (${error.message}), se reintenta en el próximo.`);
+        return;
+    }
+    console.error(error);
+    process.exitCode = 1;
+});
