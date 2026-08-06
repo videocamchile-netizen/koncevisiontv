@@ -272,13 +272,13 @@ async function procesarFuente(fuente, loteTimestamp) {
                 titulo: redactado.titulo,
                 resumen: redactado.resumen,
                 categoria: CATEGORIAS.includes(redactado.categoria) ? redactado.categoria : 'Nacional',
-                imagen: imagenUrl || undefined,
-                imagenCredito: imagenCredito || undefined,
                 fuenteNombre: fuente.nombre,
                 fuenteUrl: enlaceOriginal,
                 fecha: item.pubDate ? new Date(item.pubDate).toISOString() : new Date().toISOString(),
                 agregada: loteTimestamp,
             };
+            if (imagenUrl) frontmatter.imagen = imagenUrl;
+            if (imagenCredito) frontmatter.imagenCredito = imagenCredito;
 
             const archivo = matter.stringify(redactado.cuerpo, frontmatter);
             writeFileSync(rutaArchivo, archivo, 'utf8');
