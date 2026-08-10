@@ -1,18 +1,25 @@
 ---
+interface Props {
+    clave?: string;
+    etiqueta?: string;
+}
+
+const { clave = 'visitas-totales-v2', etiqueta = 'Visitas' } = Astro.props;
+const idContenedor = `contador-visitas-${clave}`;
+const idNumero = `contador-numero-${clave}`;
 ---
 
-<div class="contador-visitas" id="contador-visitas" aria-live="polite">
-    <span class="contador-etiqueta">Visitas</span>
-    <span class="contador-numero" id="contador-numero">···</span>
+<div class="contador-visitas" id={idContenedor} aria-live="polite">
+    <span class="contador-etiqueta">{etiqueta}</span>
+    <span class="contador-numero" id={idNumero}>···</span>
 </div>
 
-<script>
+<script define:vars={{ clave, idContenedor, idNumero }}>
     const NAMESPACE = 'koncevisiontv';
-    const KEY = 'visitas-totales-v2';
-    const contenedor = document.getElementById('contador-visitas');
-    const numero = document.getElementById('contador-numero');
+    const contenedor = document.getElementById(idContenedor);
+    const numero = document.getElementById(idNumero);
 
-    fetch(`https://abacus.jasoncameron.dev/hit/${NAMESPACE}/${KEY}`)
+    fetch(`https://abacus.jasoncameron.dev/hit/${NAMESPACE}/${clave}`)
         .then((respuesta) => respuesta.json())
         .then((datos) => {
             if (numero && typeof datos.value === 'number') {
