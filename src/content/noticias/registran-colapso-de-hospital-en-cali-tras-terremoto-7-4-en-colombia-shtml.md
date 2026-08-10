@@ -11,7 +11,7 @@ fuenteUrl: >-
   https://www.biobiochile.cl/noticias/internacional/america-latina/2026/08/10/registran-colapso-de-hospital-en-cali-tras-terremoto-7-4-en-colombia.shtml
 fecha: '2026-08-10T10:22:29.000Z'
 agregada: '2026-08-10T14:26:53.303Z'
-imagen: 'https://rudo.video/redirector/firstvideo/d5c2324b5a0dda2da8e381fab75e5749.mp4'
+imagen: 'https://media.biobiochile.cl/wp-content/uploads/2026/08/social-colapso-hospital-colombia.png'
 ---
 La ciudad colombiana de Cali atraviesa momentos sumamente complejos luego de que un potente movimiento telurífero de magnitud 7,4 sacudiera el país durante la jornada de este lunes. La emergencia ha puesto a prueba la capacidad de respuesta de los servicios de auxilio debido a los múltiples daños estructurales reportados en distintos puntos.
 
