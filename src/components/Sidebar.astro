@@ -91,8 +91,48 @@ const miniaturaPrograma = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.
                 <img src="/anuncios/eamc.webp" alt="EAMC Construcciones" />
             </a>
         </div>
+
+        <div class="anuncio-lateral">
+            <button type="button" class="anuncio-video-disparador" data-anuncio-video>
+                <img src="/anuncios/liceo-hvl-miniatura.png" alt="Liceo HVL" />
+                <span class="anuncio-video-play" aria-hidden="true">▶</span>
+            </button>
+        </div>
     )}
 </aside>
+
+{anuncioLateral && (
+    <div class="anuncio-video-modal" data-anuncio-video-modal hidden>
+        <div class="anuncio-video-modal-fondo" data-anuncio-video-cerrar></div>
+        <div class="anuncio-video-modal-contenido">
+            <button type="button" class="anuncio-video-modal-cerrar" data-anuncio-video-cerrar aria-label="Cerrar">✕</button>
+            <video class="anuncio-video-modal-video" controls playsinline poster="/anuncios/liceo-hvl-miniatura.png">
+                <source src="/anuncios/liceo-hvl.mp4" type="video/mp4" />
+            </video>
+            <a href="https://liceohvl.cl" target="_blank" rel="noopener noreferrer" class="anuncio-video-modal-link">
+                Visitar liceohvl.cl
+            </a>
+        </div>
+    </div>
+)}
+
+<script>
+    const disparador = document.querySelector('[data-anuncio-video]');
+    const modal = document.querySelector('[data-anuncio-video-modal]');
+    const video = modal?.querySelector('video');
+
+    disparador?.addEventListener('click', () => {
+        modal?.removeAttribute('hidden');
+        video?.play();
+    });
+
+    modal?.querySelectorAll('[data-anuncio-video-cerrar]').forEach((el) => {
+        el.addEventListener('click', () => {
+            modal.setAttribute('hidden', '');
+            video?.pause();
+        });
+    });
+</script>
 
 <style>
     .sidebar {
@@ -262,5 +302,103 @@ const miniaturaPrograma = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.
         width: 100%;
         border-radius: 4px;
         display: block;
+    }
+
+    .anuncio-video-disparador {
+        position: relative;
+        width: 100%;
+        padding: 0;
+        border: none;
+        background: none;
+        cursor: pointer;
+        display: block;
+    }
+
+    .anuncio-video-disparador img {
+        width: 100%;
+        border-radius: 4px;
+        display: block;
+    }
+
+    .anuncio-video-play {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: var(--rojo-konce);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+    }
+
+    .anuncio-video-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 200;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .anuncio-video-modal[hidden] {
+        display: none;
+    }
+
+    .anuncio-video-modal-fondo {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+    }
+
+    .anuncio-video-modal-contenido {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 420px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .anuncio-video-modal-video {
+        width: 100%;
+        max-height: 80vh;
+        border-radius: 4px;
+        background: black;
+    }
+
+    .anuncio-video-modal-cerrar {
+        position: absolute;
+        top: -44px;
+        right: 0;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.4rem;
+        cursor: pointer;
+        padding: 8px;
+    }
+
+    .anuncio-video-modal-link {
+        display: inline-block;
+        background: var(--rojo-konce);
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+    }
+
+    .anuncio-video-modal-link:hover {
+        background: var(--rojo-konce-oscuro);
     }
 </style>
