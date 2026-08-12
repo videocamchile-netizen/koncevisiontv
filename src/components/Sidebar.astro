@@ -121,17 +121,22 @@ const miniaturaPrograma = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.
     const modal = document.querySelector('[data-anuncio-video-modal]');
     const video = modal?.querySelector('video');
 
+    function cerrar() {
+        modal?.setAttribute('hidden', '');
+        video?.pause();
+        if (video) video.currentTime = 0;
+    }
+
     disparador?.addEventListener('click', () => {
         modal?.removeAttribute('hidden');
         video?.play();
     });
 
     modal?.querySelectorAll('[data-anuncio-video-cerrar]').forEach((el) => {
-        el.addEventListener('click', () => {
-            modal.setAttribute('hidden', '');
-            video?.pause();
-        });
+        el.addEventListener('click', cerrar);
     });
+
+    video?.addEventListener('ended', cerrar);
 </script>
 
 <style>
