@@ -114,6 +114,7 @@ const miniaturaPrograma = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.
                 data-anuncio-video="vega"
                 data-video-src="/anuncios/vega-monumental.mp4"
                 data-video-poster="/anuncios/vega-monumental-miniatura.png"
+                data-video-ancho="840"
             >
                 <img src="/anuncios/vega-monumental-miniatura.png" alt="Empresas Vega Monumental" />
                 <span class="anuncio-video-play" aria-hidden="true">▶</span>
@@ -138,6 +139,7 @@ const miniaturaPrograma = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.
     const modal = document.querySelector('[data-anuncio-video-modal]');
     const video = modal?.querySelector('[data-anuncio-video-elemento]') as HTMLVideoElement | null | undefined;
     const link = modal?.querySelector('[data-anuncio-video-link]') as HTMLAnchorElement | null | undefined;
+    const contenido = modal?.querySelector('.anuncio-video-modal-contenido') as HTMLElement | null | undefined;
 
     function cerrar() {
         modal?.setAttribute('hidden', '');
@@ -150,6 +152,9 @@ const miniaturaPrograma = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.
             if (!video) return;
             video.src = disparador.getAttribute('data-video-src') ?? '';
             video.poster = disparador.getAttribute('data-video-poster') ?? '';
+
+            const ancho = disparador.getAttribute('data-video-ancho');
+            if (contenido) contenido.style.maxWidth = ancho ? `${ancho}px` : '';
 
             const linkHref = disparador.getAttribute('data-video-link');
             if (link) {
