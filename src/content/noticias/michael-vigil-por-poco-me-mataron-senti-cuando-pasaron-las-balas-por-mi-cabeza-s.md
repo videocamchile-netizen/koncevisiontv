@@ -12,7 +12,6 @@ fuenteUrl: >-
   https://www.biobiochile.cl/biobiotv/programas/la-entrevista-de-tomas-mosciatti/2026/08/13/michael-vigil-por-poco-me-mataron-senti-cuando-pasaron-las-balas-por-mi-cabeza.shtml
 fecha: '2026-08-13T21:00:35.000Z'
 agregada: '2026-08-14T01:13:57.098Z'
-imagen: 'https:'
 ---
 Michael Vigil construyó su trayectoria en la primera línea de la lucha antidrogas, logrando infiltrarse en estructuras criminales tan complejas como las de Pablo Escobar, el Chapo Guzmán y el Cartel de Guadalajara. Su paso por estas misiones lo dejó al borde de la muerte en más de una ocasión, llegando a presenciar de cerca el impacto de proyectiles muy cerca de su cráneo. Gracias a este historial operativo, el exfuncionario sostiene que las estrategias tradicionales basadas en descabezar organizaciones no dan resultados efectivos, ya que los líderes son reemplazados con extrema facilidad.
 
