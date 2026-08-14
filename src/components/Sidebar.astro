@@ -93,8 +93,29 @@ const miniaturaPrograma = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.
         </div>
 
         <div class="anuncio-lateral">
-            <button type="button" class="anuncio-video-disparador" data-anuncio-video>
+            <button
+                type="button"
+                class="anuncio-video-disparador"
+                data-anuncio-video="liceo"
+                data-video-src="/anuncios/liceo-hvl.mp4"
+                data-video-poster="/anuncios/liceo-hvl-miniatura.png"
+                data-video-link="https://liceohvl.cl"
+                data-video-link-texto="Visitar liceohvl.cl"
+            >
                 <img src="/anuncios/liceo-hvl-miniatura.png" alt="Liceo HVL" />
+                <span class="anuncio-video-play" aria-hidden="true">▶</span>
+            </button>
+        </div>
+
+        <div class="anuncio-lateral">
+            <button
+                type="button"
+                class="anuncio-video-disparador"
+                data-anuncio-video="vega"
+                data-video-src="/anuncios/vega-monumental.mp4"
+                data-video-poster="/anuncios/vega-monumental-miniatura.png"
+            >
+                <img src="/anuncios/vega-monumental-miniatura.png" alt="Empresas Vega Monumental" />
                 <span class="anuncio-video-play" aria-hidden="true">▶</span>
             </button>
         </div>
@@ -106,20 +127,17 @@ const miniaturaPrograma = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.
         <div class="anuncio-video-modal-fondo" data-anuncio-video-cerrar></div>
         <div class="anuncio-video-modal-contenido">
             <button type="button" class="anuncio-video-modal-cerrar" data-anuncio-video-cerrar aria-label="Cerrar">✕</button>
-            <video class="anuncio-video-modal-video" controls playsinline poster="/anuncios/liceo-hvl-miniatura.png">
-                <source src="/anuncios/liceo-hvl.mp4" type="video/mp4" />
-            </video>
-            <a href="https://liceohvl.cl" target="_blank" rel="noopener noreferrer" class="anuncio-video-modal-link">
-                Visitar liceohvl.cl
-            </a>
+            <video class="anuncio-video-modal-video" data-anuncio-video-elemento controls playsinline></video>
+            <a href="#" target="_blank" rel="noopener noreferrer" class="anuncio-video-modal-link" data-anuncio-video-link hidden></a>
         </div>
     </div>
 )}
 
 <script>
-    const disparador = document.querySelector('[data-anuncio-video]');
+    const disparadores = document.querySelectorAll('[data-anuncio-video]');
     const modal = document.querySelector('[data-anuncio-video-modal]');
-    const video = modal?.querySelector('video');
+    const video = modal?.querySelector('[data-anuncio-video-elemento]') as HTMLVideoElement | null | undefined;
+    const link = modal?.querySelector('[data-anuncio-video-link]') as HTMLAnchorElement | null | undefined;
 
     function cerrar() {
         modal?.setAttribute('hidden', '');
@@ -127,9 +145,26 @@ const miniaturaPrograma = `https://i.ytimg.com/vi/${programa.videoId}/hqdefault.
         if (video) video.currentTime = 0;
     }
 
-    disparador?.addEventListener('click', () => {
-        modal?.removeAttribute('hidden');
-        video?.play();
+    disparadores.forEach((disparador) => {
+        disparador.addEventListener('click', () => {
+            if (!video) return;
+            video.src = disparador.getAttribute('data-video-src') ?? '';
+            video.poster = disparador.getAttribute('data-video-poster') ?? '';
+
+            const linkHref = disparador.getAttribute('data-video-link');
+            if (link) {
+                if (linkHref) {
+                    link.href = linkHref;
+                    link.textContent = disparador.getAttribute('data-video-link-texto') ?? linkHref;
+                    link.removeAttribute('hidden');
+                } else {
+                    link.setAttribute('hidden', '');
+                }
+            }
+
+            modal?.removeAttribute('hidden');
+            video.play();
+        });
     });
 
     modal?.querySelectorAll('[data-anuncio-video-cerrar]').forEach((el) => {
