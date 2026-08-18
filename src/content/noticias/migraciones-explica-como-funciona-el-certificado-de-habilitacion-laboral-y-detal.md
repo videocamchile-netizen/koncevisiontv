@@ -11,7 +11,6 @@ fuenteUrl: >-
   https://www.biobiochile.cl/biobiotv/programas/expreso-bio-bio/2026/08/17/migraciones-explica-como-funciona-el-certificado-de-habilitacion-laboral-y-detalla-millonarias-multas.shtml
 fecha: '2026-08-17T14:03:09.000Z'
 agregada: '2026-08-17T18:13:57.072Z'
-imagen: 'https:'
 ---
 Desde el Servicio Nacional de Migraciones informaron sobre el estreno de un nuevo documento digital dotado de un código QR, diseñado para que cualquier jefatura compruebe de forma rápida la situación legal de ciudadanos extranjeros antes de sumarlos a sus equipos. Este trámite no tiene costo, es completamente virtual y opcional, aunque representa una salvaguarda importante frente a posibles incumplimientos normativos.
 
